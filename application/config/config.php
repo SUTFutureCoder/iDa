@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/nws_v2/main/';
+$config['base_url']	= '';
 
 /*
 |--------------------------------------------------------------------------

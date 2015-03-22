@@ -29,7 +29,36 @@ class Index extends CI_Controller{
     */
     public function Index()
     {          
+        $this->load->library('session');
+        
+        //判断是否登录
+        if ($this->session->userdata('user_key')){
+            
+        } else {
+            
+        }
         $this->load->view('index_view');
     }
+    
+    /**    
+     *  @Purpose:    
+     *  显示验证码    
+     *  @Method Name:
+     *  setValidateCode()    
+     *  @Parameter: 
+     *     
+     *  @Return: 
+     *  
+    */
+    public function setValidateCode(){
+        //准备注册/登录
+        $this->load->library('session');
+        $this->load->library('ValidateCode');
+        $_vc = new ValidateCode();            
+        $this->session->set_userdata('authnum_session', $_vc->getCode());
+        $_vc->doimg();
+        
+    }
+    
     
 }
