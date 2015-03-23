@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">    
 
-    <title>工大爱答</title>
+    <title>工大爱答[Alpha]</title>
 
     <!-- Bootstrap core CSS -->
     <link href="http://nws.oss-cn-qingdao.aliyuncs.com/bootstrap.min.css" rel="stylesheet">
@@ -35,7 +35,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
+            <li class="active"><a href="#">主页</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
             <li class="dropdown">
@@ -162,7 +162,7 @@
                             <div class="form-group">
                                 <label for="registerTele" class="col-sm-2 control-label">手机号码</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="registerTele">
+                                    <input type="text" class="form-control" required="required" id="registerTele">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -184,6 +184,18 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="registerName" class="col-sm-2 control-label">姓名</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="registerName">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerNumber" class="col-sm-2 control-label">学号</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="registerNumber">
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="registerSchool" class="col-sm-2 control-label">就读学校</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="registerSchool">
@@ -193,12 +205,6 @@
                                 <label for="registerMajor" class="col-sm-2 control-label">专业班级</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="registerMajor">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="registerName" class="col-sm-2 control-label">姓名</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="registerName">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -212,7 +218,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary">注册</button>
+                        <button type="submit" class="btn btn-primary">注册</button>
                     </div>
                 </div>
             </div>
@@ -248,8 +254,8 @@
         }
         
         function showRegister(){
-            $('#registerImg').removeAttr('src');
             $('#loginModal').modal('hide');
+            $('#registerImg').removeAttr('src');
             $('#registerImg').attr('src', '<?php echo base_url('/index.php/index/setValidateCode/setValidateCode');?>');
             $('#registerModal').modal('toggle');
         }

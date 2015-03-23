@@ -5,7 +5,7 @@ if (!defined('BASEPATH'))
  * 爱答入口
  * 
  *
- * @copyright  版权所有(C) 2014-2015 沈阳工业大学ACM实验室 沈阳工业大学网络管理中心 *Chen
+ * @copyright  版权所有(C) 2015-2015 沈阳工业大学ACM实验室 沈阳工业大学网络管理中心 *Chen
  * @license    http://www.gnu.org/licenses/gpl-3.0.txt   GPL3.0 License
  * @version    0.1
  * @link       https://github.com/SUTFutureCoder 
