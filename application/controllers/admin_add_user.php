@@ -44,7 +44,6 @@ class Admin_add_user extends CI_Controller{
         //获取角色列表
         $role_list = array();
         $role_list = $this->role->getRoleList();
-        
         $this->load->view('admin_add_user_view', array(
             'role_list' => $role_list
         ));
@@ -66,6 +65,7 @@ class Admin_add_user extends CI_Controller{
         $this->load->library('role');
         $this->load->library('authorizee');
         $this->load->model('user_model');
+        $this->load->library('encrypt');
         
         if (!$this->authorizee->CheckAuthorizee($this->session->userdata('user_role'), 'person_add')){
             echo json_encode(array('code' => -1, 'error' => '抱歉，您的权限不足'));
@@ -74,7 +74,7 @@ class Admin_add_user extends CI_Controller{
         
         $clean = array();
         
-        if ($this->input->post('user_telephone', TRUE) && ctype_digit($this->input->post('user_telephone', TRUE)) && 9 == strlen($this->input->post('user_telephone', TRUE))){
+        if ($this->input->post('user_telephone', TRUE) && ctype_digit($this->input->post('user_telephone', TRUE)) && 11 == strlen($this->input->post('user_telephone', TRUE))){
             $clean['user_telephone'] = $this->input->post('user_telephone', TRUE);
         } else {
             echo json_encode(array('code' => -2, 'error' => '手机号码有误或为空'));
@@ -94,7 +94,7 @@ class Admin_add_user extends CI_Controller{
             if (strlen($this->input->post('user_password', TRUE)) > 20){
                 echo json_encode(array('code' => -10, 'error' => '请输入20位以下的密码'));
             } else {
-                $clean['user_password'] = $this->input->post('user_password', TRUE);
+                $clean['user_password'] = $this->encrypt->encode($this->input->post('user_password', TRUE));
             }
         }
         
@@ -137,9 +137,12 @@ class Admin_add_user extends CI_Controller{
         $clean['user_join_time'] = date('Y-m-d H:i:s');
         
         $result = $this->user_model->addUser($clean);
-                
         
-        
-        
+        if (1 != $result){
+            echo json_encode(array('code' => -11, 'error' => $result));
+            return 0;
+        } else {
+            echo json_encode(array('code' => 1));
+        }
     }
 }

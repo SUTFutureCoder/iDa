@@ -7,13 +7,7 @@
 </head>
 <body>
     <br/>
-    <form action="addQuestion" class="form-horizontal" role="form" id="form_add_question" role="form" method="post">
-    <div class="form-group">
-        <label for="question_name" class="col-sm-2 control-label">题目名称</label>
-        <div class="col-sm-9">
-            <input type="text" class="form-control" name="question_name" id="question_name">
-        </div>
-    </div>
+    <form action="admin_add_question/addQuestion" class="form-horizontal" role="form" id="form_add_question" method="post">
     <div class="form-group">
         <label for="question_type" class="col-sm-2 control-label">题目类型</label>
         <div class="col-sm-9">
@@ -33,7 +27,7 @@
     <div class="form-group">
         <label for="question_num" class="col-sm-2 control-label">选项个数</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" id="question_num">
+            <input type="text" class="form-control" name="question_num" id="question_num">
         </div>
     </div>
     <div class="col-sm-10 col-sm-offset-1">
@@ -42,6 +36,13 @@
     <br/>
     <br/>
     <div class="form-group" id="question_choose_set">
+    </div>
+    <br/>
+    <div class="form-group">
+        <label for="question_choose_answer" class="col-sm-2 control-label">选择题正确答案[大写]</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="question_choose_answer" id="question_choose_answer">
+        </div>
     </div>
     <hr>
     
@@ -68,7 +69,7 @@
     </div>
     <hr>
     <div class="col-sm-10 col-sm-offset-1">
-        <input class="form-control btn btn-success" id="submit" value="提交">
+        <input type="submit" class="form-control btn btn-success" id="submit" value="提交">
     </div>
     <br/>
     <br/>
@@ -88,9 +89,15 @@
                     $(".btn").attr("disabled", "disabled");
                 },
                 success     : function (data){
-                    $("#form_add_question").resetForm();
+                    if (1 != data['code']){
+                        alert(data['error']);
+                    } else {
+                        alert('添加成功');
+                        $("#form_add_question").resetForm();
+                    }
                 },
                 error       : function (msg){
+                    console.log(msg);
                     alert("操作失败");
                     $(".btn").removeAttr("disabled");
                     $(".btn").attr("value", "添加");

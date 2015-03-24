@@ -45,22 +45,27 @@ class Cache{
         
         switch ($type){
             case 'answer':
+                $tem_seed = 'an';
                 $seed = 'an' . time();
                 break;
             
             case 'role':
-                $seed = 'ro' . time();
+                $tem_seed = 'ro';
+                $seed = 'ro1' . time();
                 break;
             
             case 'authorizee':
+                $tem_seed = 'au';
                 $seed = 'au' . time();
                 break;
             
             case 'question':
+                $tem_seed = 'qu';
                 $seed = 'qu' . time();
                 break;
         }
-        self::$_mc->set('ida_' . $type . '_seed', $seed);
+        
+        self::$_mc->set('ida_' . $type . '_seed_' . $tem_seed, $seed);
         return $seed;
     }
     
@@ -80,13 +85,29 @@ class Cache{
             self::$_mc->connect('127.0.0.1', 11211) or die('链接失败！');  
         }
         
-        if ($seed = self::$_mc->get('ida_' . $type . '_seed')){
+        switch ($type){
+            case 'answer':
+                $tem_seed = 'an';
+                break;
+            
+            case 'role':
+                $tem_seed = 'ro';
+                break;
+            
+            case 'authorizee':
+                $tem_seed = 'au';
+                break;
+            
+            case 'question':
+                $tem_seed = 'qu';
+                break;
+        }
+        
+        if ($seed = self::$_mc->get('ida_' . $type . '_seed_' . $tem_seed)){            
             return $seed;
         } else {
             $seed = self::setNS($type);
             return $seed;
         }
     }
-    
-    
 }

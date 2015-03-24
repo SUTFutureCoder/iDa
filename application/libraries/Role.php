@@ -40,7 +40,7 @@ class Role{
             $cursor = $db->ida->role->find(array(), array('role_name' => 1));
             
             foreach ($cursor as $id => $value){
-                $data[] = $value;
+                $data[] = $value['role_name'];
             }
             
             $mc->set('ida_' . self::$_ci->cache->getNS('role') . '_role_name_list', $data);

@@ -6,7 +6,7 @@
 </head>
 <body>
     <br/>
-    <form action="addUser" class="form-horizontal" role="form" id="form_add_user" role="form" method="post">
+    <form action="admin_add_user/addUser" class="form-horizontal" role="form" id="form_add_user" method="post">
     <div class="form-group">
         <label for="user_telephone" class="col-sm-2 control-label">手机号码</label>
         <div class="col-sm-9">
@@ -22,13 +22,13 @@
     <div class="form-group">
         <label for="user_password" class="col-sm-2 control-label">密码</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" name="user_password" id="user_password">
+            <input type="password" class="form-control" name="user_password" id="user_password">
         </div>
     </div>
     <div class="form-group">
         <label for="user_password_confirm" class="col-sm-2 control-label">密码确认</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" name="user_password_confirm" id="user_password_confirm">
+            <input type="password" class="form-control" name="user_password_confirm" id="user_password_confirm">
         </div>
     </div>
     <div class="form-group">
@@ -59,15 +59,15 @@
         <label for="user_role" class="col-sm-2 control-label">角色</label>
         <div class="col-sm-9">
             <select class="form-control" name="user_role" id="user_role">
-                <?php foreach ($role_list as $key => $value): ?>
-                    <option><?= $value['role_name'] ?></option>
+                <?php foreach ($role_list as $value): ?>
+                    <option><?= $value ?></option>
                 <?php endforeach; ?>
             </select> 
         </div>
     </div>
     <hr>
     <div class="col-sm-10 col-sm-offset-1">
-        <input class="form-control btn btn-success" id="submit" value="提交">
+        <input type="submit" class="form-control btn btn-success" value="提交">
     </div>
     <br/>
     <br/>
@@ -86,13 +86,16 @@
                 $(".btn").attr("value", "正在提交中……请稍后");
                 $(".btn").attr("disabled", "disabled");
             },
-            success     : function (data){    
+            success     : function (data){ 
+                console.log(data);
                 if (1 != data['code']){
                     alert(data['error']);
                 } else {
                     alert('添加成功');
+                    $("#form_add_user").resetForm();
                 }
-                $("#form_add_user").resetForm();
+                $(".btn").removeAttr("disabled");
+                $(".btn").attr("value", "添加");
             },
             error       : function (msg){
                 alert("操作失败");
