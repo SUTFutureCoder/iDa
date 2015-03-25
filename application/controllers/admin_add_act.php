@@ -168,8 +168,8 @@ class Admin_add_act extends CI_Controller{
                         echo json_encode(array('code' => -14, 'error' => '此文件已存在，请更名上传'));
                         return 0;
                     } else {
-                        move_uploaded_file($_FILES['upload_img']["tmp_name"], 'upload/act_img/' . $_FILES['upload_img']['name']);
-                        $clean['act_img'] = $_FILES['upload_img']['name'];
+                        $clean['act_img'] = time() . $_FILES['upload_img']['name'];
+                        move_uploaded_file($_FILES['upload_img']["tmp_name"], 'upload/act_img/' . $clean['act_img']);
                     }
                 }
             }

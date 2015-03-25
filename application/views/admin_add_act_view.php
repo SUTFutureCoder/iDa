@@ -29,13 +29,6 @@
     </div>
     
     <div class="form-group">
-        <label for="act_mission" class="col-sm-2 control-label">闯关模式</label>
-        <div class="col-sm-9">
-            <input type="checkbox" name="act_mission" id="act_mission" >
-        </div>
-    </div>
-    
-    <div class="form-group">
         <label for="act_school" class="col-sm-2 control-label">活动学校</label>
         <div class="col-sm-9">
             <input type="text" class="form-control" name="act_school" id="act_school">

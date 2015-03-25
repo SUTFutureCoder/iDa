@@ -65,48 +65,28 @@
         <br/>
         <br/>
         <div class="alert alert-info" role="alert">正在进行的答题</div>
+        <?php if (is_array($act_list)): ?>
         <div class="row">
+            <?php foreach ($act_list as $value): ?>
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
-                    <img src="img/default.jpg" alt="...">
+                    <?php if (!isset($value['act_img'])):?>
+                        <img src="img/default.jpg" alt="...">
+                    <?php else: ?>
+                        <img src="upload/act_img/<?= $value['act_img'] ?>" alt="...">
+                    <?php endif; ?>
                     <div class="caption">
-                        <h3>act_name</h3>
-                        <p>act_start-act_end</p>
+                        <h3><?= $value['act_name']?></h3>
+                        <p><?= $value['act_comment'] ?></p>
                         <p><botton  class="btn btn-primary" role="button" onclick="joinTest()">参加</botton> <botton id="popover" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">关于</botton></p>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-4">
-                <div class="thumbnail">
-                    <img src="img/default.jpg" alt="...">
-                    <div class="caption">
-                        <h3>act_name</h3>
-                        <p>act_start-act_end</p>
-                        <p><a href="#" class="btn btn-primary" role="button">参加</a> <a href="#" id="popover" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">关于</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-4">
-                <div class="thumbnail">
-                    <img src="img/default.jpg" alt="...">
-                    <div class="caption">
-                        <h3>act_name</h3>
-                        <p>act_start-act_end</p>
-                        <p><a href="#" class="btn btn-primary" role="button">参加</a> <a href="#" id="popover" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">关于</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-4">
-                <div class="thumbnail">
-                    <img src="img/default.jpg" alt="...">
-                    <div class="caption">
-                        <h3>act_name</h3>
-                        <p>act_start-act_end</p>
-                        <p><a href="#" class="btn btn-primary" role="button">参加</a> <a href="#" id="popover" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">关于</a></p>
-                    </div>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
+        <?php endif; ?>
+        
+        
         <div class="modal fade bs-example-modal-sm" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog  modal-sm">
                 <div class="modal-content">

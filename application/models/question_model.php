@@ -76,4 +76,35 @@ class Question_model extends CI_Model{
             return 0;
         }
     }
+    
+    /**    
+     *  @Purpose:    
+     *  添加问题
+     *  @Method Name:
+     *  dumpQuestion($question_type, $type)
+     *  @Parameter: 
+     *  string $question_type 问题类型
+     *  string $type 类型
+     *  @Return: 
+     *  0 无数据
+     *  array $data id
+    */ 
+    public function dumpQuestion($question_type, $type){
+        $this->load->library('database');
+        
+        $db = $this->database->conn();
+        $data = array();
+        
+        $cursor = $db->ida->question->find(array('type' => $type, 'question_type' => $question_type), array('question_id' => 1));
+        
+        foreach ($cursor as $key => $value){
+            if (!$key){
+                return 0;
+            } else {
+                $data[] = $value;
+            }
+        }
+        
+        return $data;
+    }
 }

@@ -30,10 +30,21 @@ class Index extends CI_Controller{
     public function Index()
     {          
         $this->load->library('session');
+        $this->load->library('cache');
+        $this->load->model('act_model');
         
-        //判断是否登录
+        $mc = $this->cache->memcache();
         
-        $this->load->view('index_view');
+        //获取活动列表
+        
+        if (!$data = $mc->get('ida_' . $this->cache->getNS('act') . '_ing_list')){
+            $data = $this->act_model->getActList();
+            //保存一天
+            $mc->set('ida_' . $this->cache->getNS('act') . '_ing_list', $data, 0, 86400);
+        }
+        $this->load->view('index_view', array(
+            'act_list' => $data   
+        ));
     }
     
     /**    

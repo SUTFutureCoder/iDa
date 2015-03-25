@@ -41,4 +41,31 @@ class Act_model extends CI_Model{
             return 0;
         }
     }
+    
+    /**    
+     *  @Purpose:    
+     *  获取活动列表
+     *  @Method Name:
+     *  getActList()    
+     *  @Parameter: 
+     *  @Return: 
+     *  0 无列表
+     *  array $act_list 活动列表
+    */ 
+    public function getActList(){
+        $this->load->library('database');
+        $db = $this->database->conn();
+        
+        $cursor = $db->ida->act->find(array('act_start' => array('$lt' => date('Y-m-d H:i:s')), 'act_end' => array('$gt' => date('Y-m-d H:i:s'))));
+        
+        $act_list = array();
+        
+        foreach ($cursor as $key => $value){
+            if (!$key){
+                return 0;
+            }
+            $act_list[] = $value;
+        }
+        return $act_list;
+    }
 }

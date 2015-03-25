@@ -44,6 +44,11 @@ class Cache{
         }
         
         switch ($type){
+            case 'act':
+                $tem_seed = 'ac3';
+                $seed = 'ac1' . time();
+                break;
+            
             case 'answer':
                 $tem_seed = 'an';
                 $seed = 'an' . time();
@@ -62,6 +67,11 @@ class Cache{
             case 'question':
                 $tem_seed = 'qu';
                 $seed = 'qu' . time();
+                break;
+            
+            case 'question_type':
+                $tem_seed = 'qu_t';
+                $seed = 'qu_t' . time();
                 break;
         }
         
@@ -86,6 +96,10 @@ class Cache{
         }
         
         switch ($type){
+            case 'act':
+                $tem_seed = 'ac3';
+                break;
+            
             case 'answer':
                 $tem_seed = 'an';
                 break;
@@ -100,6 +114,10 @@ class Cache{
             
             case 'question':
                 $tem_seed = 'qu';
+                break;
+            
+            case 'question_type':
+                $tem_seed = 'qu_t';
                 break;
         }
         

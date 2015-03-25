@@ -151,6 +151,25 @@ class Admin_add_question extends CI_Controller{
             $mc = $this->cache->memcache();
             $clean['question_id'] = $result;
             $mc->set('ida_' . $this->cache->getNS('question') . '_' . $result, $clean);
+            
+            //id插入到分类中
+            if (!$data = $mc->get('ida_' . $this->cache->getNS('question_type') . '_' . $clean['question_type'] . '_' . $clean['type'])){
+                //从数据库中dump到分类
+                if ($question_id_set = $this->question_model->dumpQuestion($clean['question_type'], $clean['type'])){
+                    foreach ($question_id_set as $value){
+                        $question_id[] = $value;
+                    }
+                    $mc->set('ida_' . $this->cache->getNS('question_type') . '_' . $clean['question_type'] . '_' . $clean['type'], $question_id);
+                } else {
+                    //之前没有数据
+                    $question_id[0] = $clean['question_id'];
+                    $mc->set('ida_' . $this->cache->getNS('question_type') . '_' . $clean['question_type'] . '_' . $clean['type'], $question_id);
+                }
+            } else {
+                //之前有数据
+                $data[] = $clean['question_id'];
+                $mc->set('ida_' . $this->cache->getNS('question_type') . '_' . $clean['question_type'] . '_' . $clean['type'], $data);
+            }
             echo json_encode(array('code' => 1));
         } else {
             echo json_encode(array('code' => -8, 'error' => '插入数据失败'));
