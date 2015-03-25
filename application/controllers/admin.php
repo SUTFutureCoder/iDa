@@ -33,8 +33,6 @@ class Admin extends CI_Controller{
         $this->load->library('session');
         $this->load->library('authorizee');
         
-        $this->session->set_userdata('user_role', '管理员');
-                
         if (!$this->session->userdata('user_role') || !$this->authorizee->CheckAuthorizee($this->session->userdata('user_role'), 'control_center')){
             header("Content-type: text/html; charset=utf-8");
             echo '<script>alert("抱歉，您的权限不足");window.location.href="' . base_url() . '";</script>';            

@@ -35,8 +35,8 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">主页</a></li>
-            <li><a href="<?= base_url('index.php/about')?>">About</a></li>
+            <li><a href="<?= base_url()?>">主页</a></li>
+            <li class="active"><a href="#">About</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">            
             <!-- <li class="active"><a href="./"></a></li> -->
@@ -64,48 +64,10 @@
         <br/>
         <br/>
         <br/>
-        <div class="alert alert-info" role="alert">正在进行的答题</div>
-        <div class="row">
-            <div class="col-sm-6 col-md-4">
-                <div class="thumbnail">
-                    <img src="img/default.jpg" alt="...">
-                    <div class="caption">
-                        <h3>act_name</h3>
-                        <p>act_start-act_end</p>
-                        <p><a href="#" class="btn btn-primary" role="button" onclick="joinTest()">参加</a> <a href="#" id="popover" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">关于</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-4">
-                <div class="thumbnail">
-                    <img src="img/default.jpg" alt="...">
-                    <div class="caption">
-                        <h3>act_name</h3>
-                        <p>act_start-act_end</p>
-                        <p><a href="#" class="btn btn-primary" role="button">参加</a> <a href="#" id="popover" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">关于</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-4">
-                <div class="thumbnail">
-                    <img src="img/default.jpg" alt="...">
-                    <div class="caption">
-                        <h3>act_name</h3>
-                        <p>act_start-act_end</p>
-                        <p><a href="#" class="btn btn-primary" role="button">参加</a> <a href="#" id="popover" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">关于</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-4">
-                <div class="thumbnail">
-                    <img src="img/default.jpg" alt="...">
-                    <div class="caption">
-                        <h3>act_name</h3>
-                        <p>act_start-act_end</p>
-                        <p><a href="#" class="btn btn-primary" role="button">参加</a> <a href="#" id="popover" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">关于</a></p>
-                    </div>
-                </div>
-            </div>
+        <div class="well well-lg">
+            <h4>开发者+运维 QQ：506200331</h4>
+            <hr/>
+            <h5>"If you always put limits on everything you do, physical or anything else, it will spread into your work and into your life. There are no limits. There are only plateaus, and you must not stay there, you must go beyond them." - Bruce Lee</h5>
         </div>
         <div class="modal fade bs-example-modal-sm" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog  modal-sm">
@@ -235,14 +197,6 @@
     <script>
         var logined = 0;
         $(function(){            
-            $('#popover').mouseover(function(){
-                $(this).popover('show');
-            });  
-            
-            $('#popover').mouseleave(function(){
-               $(this).popover('hide');
-            });  
-            
             var login_options = {
                 dataType    : "json",
                 beforeSubmit: function (){
@@ -254,17 +208,7 @@
                         alert(data['error']);
                     } else {
                         $("#loginModal").modal('toggle');
-                        $(".navbar-right").empty();                        
-                        $(".navbar-right").append('<li class="dropdown active">' + 
-                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">' + data['user_name'] + '<span class="caret"></span></a>' + 
-                    '<ul class="dropdown-menu" role="menu">' + 
-                    '<li><a href="#">Action</a></li>' + 
-                    '<li><a href="#">Another action</a></li>' + 
-                    '<li><a href="#">Something else here</a></li>' + 
-                    '<li class="divider"></li>' +                     
-                    '<li><a id="logout" href="#">注销</a></li>' + 
-                    '</ul>'+
-                '</li>');
+                        $("#login_button").html(data['user_name']);
                         $("#login_button").removeAttr("onclick");
                         $("#form_login").resetForm();
                         logined = 1;
@@ -344,11 +288,6 @@
     </script>
     
     <script>
-        function joinTest(){
-            if (logined = 0){
-                $('#loginModal').modal('toggle');
-            }
-        }
         
         function showLogin(){
             $('#loginImg').removeAttr('src');

@@ -105,7 +105,7 @@ class Admin_add_question extends CI_Controller{
         
         if ($this->input->post('question_private', TRUE) && 'on' == $this->input->post('question_private', TRUE)){
             $clean['question_private'] = 1;
-        } 
+        }  
         
 //        $this->question_model->add_question();
     }    
