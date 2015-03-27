@@ -7,7 +7,7 @@
 </head>
 <body>
     <br/>
-    <form action="addAct" class="form-horizontal" role="form" id="form_add_act" role="form" method="post">
+    <form action="admin_add_act/addAct" enctype="multipart/form-data" class="form-horizontal" role="form" id="form_add_act" role="form" method="post">
     <div class="form-group">
         <label for="act_name" class="col-sm-2 control-label">活动名称</label>
         <div class="col-sm-9">
@@ -20,7 +20,7 @@
             <textarea class="form-control" name="act_comment" id="act_comment" rows="3"></textarea>
         </div>
     </div>
-        
+    <hr>    
     <div class="form-group">
         <label for="act_private" class="col-sm-2 control-label">活动私有</label>
         <div class="col-sm-9">
@@ -29,22 +29,35 @@
     </div>
     
     <div class="form-group">
-        <label for="act_school" class="col-sm-2 control-label">活动单位</label>
+        <label for="act_mission" class="col-sm-2 control-label">闯关模式</label>
+        <div class="col-sm-9">
+            <input type="checkbox" name="act_mission" id="act_mission" >
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="act_school" class="col-sm-2 control-label">活动学校</label>
         <div class="col-sm-9">
             <input type="text" class="form-control" name="act_school" id="act_school">
         </div>
     </div>
-        
+    <hr>    
+    <div class="form-group">
+        <label for="act_paper_time" class="col-sm-2 control-label">答题时限(分)</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="act_paper_time" id="act_paper_time">
+        </div>
+    </div>
     <div class="form-group">
         <label for="act_start" class="col-sm-2 control-label">开始时间</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" name="act_start" id="act_start">
+            <input type="text" class="form-control" name="act_start" placeholder="2015-03-26 21:21:00" id="act_start">
         </div>
     </div>
     <div class="form-group">
         <label for="act_end" class="col-sm-2 control-label">结束时间</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" name="act_end" id="act_end">
+            <input type="text" class="form-control" name="act_end"  placeholder="2015-05-26 00:00:00" id="act_end">
         </div>
     </div>
         
@@ -52,24 +65,55 @@
         <label for="act_question_type" class="col-sm-2 control-label">题库类型</label>
         <div class="col-sm-9">
             <select class="form-control" name="act_question_type" id="act_question_type">
-                <?php foreach ($type as $key => $value): ?>
-                    <option><?= $value['role_name'] ?></option>
+                <?php foreach ($type as $value): ?>
+                    <option><?= $value ?></option>
                 <?php endforeach; ?>
             </select> 
         </div>
         
     </div>
-    
+    <hr>
     <div class="form-group">
-        <label for="act_question_sum" class="col-sm-2 control-label">题目数量</label>
+        <label for="act_question_choose_sum" class="col-sm-2 control-label">单选数量</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" name="act_question_sum" id="act_question_sum">
+            <input type="text" class="form-control" name="act_question_choose_sum" id="act_question_choose_sum">
         </div>
     </div>
     
+    <div class="form-group">
+        <label for="act_question_multi_choose_sum" class="col-sm-2 control-label">多选数量</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="act_question_multi_choose_sum" id="act_question_multi_choose_sum">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="act_question_judge_sum" class="col-sm-2 control-label">判断数量</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="act_question_judge_sum" id="act_question_judge_sum">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="act_question_fill_sum" class="col-sm-2 control-label">填空数量</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="act_question_fill_sum" id="act_question_fill_sum">
+        </div>
+    </div>
+    
+    
     <hr>
+    
+    <div class="form-group">
+        <label for="upload_img" class="col-sm-2 control-label">预览图上传</label>
+        <div class="col-sm-9">
+            <input class="form-control"  type="file" name="upload_img" id="upload_img">
+            <p class="help-block">推荐450*243</p>
+        </div>
+    </div>
+    
     <div class="col-sm-10 col-sm-offset-1">
-        <input class="form-control btn btn-success" id="submit" value="提交">
+        <input type="submit" class="form-control btn btn-success" id="submit" value="提交">
     </div>
     <br/>
     <br/>
@@ -89,7 +133,14 @@
                     $(".btn").attr("disabled", "disabled");
                 },
                 success     : function (data){
-                    $("#form_add_question").resetForm();
+                    if (data['code'] != 1){
+                        alert(data['error']);
+                    } else {
+                        alert('添加成功');
+                        $("#form_add_act").resetForm();
+                    }
+                    $(".btn").removeAttr("disabled");
+                    $(".btn").attr("value", "添加");
                 },
                 error       : function (msg){
                     alert("操作失败");
@@ -99,7 +150,7 @@
 
             };
 
-            $("#form_add_question").ajaxForm(options);
+            $("#form_add_act").ajaxForm(options);
             
             
             //确定选项数目

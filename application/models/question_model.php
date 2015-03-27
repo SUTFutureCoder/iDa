@@ -35,10 +35,45 @@ class Question_model extends CI_Model{
         $type = array();
         $type_cursor = $db->ida->command(array('distinct' => 'question', 'key' => 'question_type'));
         
-        foreach ($type_cursor as $key => $value){
-            $type[] = $value['question_type'];
+        foreach ($type_cursor as $key => $value){              
+            $type = $value;
+            break;
         }
-                
         return $type;
+    }
+    
+    /**    
+     *  @Purpose:    
+     *  添加问题
+     *  @Method Name:
+     *  addQuestion($question)    
+     *  @Parameter: 
+     *  array $question 问题数组
+     *  @Return: 
+     *  0 添加失败
+     *  $_id 添加成功
+    */ 
+    public function addQuestion($question){
+        $this->load->library('database');        
+        
+        $db = $this->database->conn();
+        
+        //设置或获取自增
+        $cursor = $db->ida->question->find(array(), array('question_id' => 1))->sort(array('question_id' => -1))->limit(1);
+        foreach ($cursor as $key => $value){
+        }
+        
+        if (!isset($key)){
+            $question['question_id'] = 1;
+        } else {
+            $question['question_id'] = ++$value['question_id'];
+        }
+        
+        $db->ida->question->insert($question, array('safe' => TRUE));
+        if ($question['_id']){
+            return $question['question_id'];
+        } else {
+            return 0;
+        }
     }
 }

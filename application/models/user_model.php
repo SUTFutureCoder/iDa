@@ -33,7 +33,7 @@ class User_model extends CI_Model{
         $this->load->library('database');
         $db = $this->database->conn();
         try{
-            $db->ida->user->insert($user_info, array('safe'=>true));            
+            $db->ida->user->insert($user_info, array('safe' => TRUE));            
             $result[0] = 1;
             $result[1] = $user_info['_id'];
         } catch (Exception $ex) {

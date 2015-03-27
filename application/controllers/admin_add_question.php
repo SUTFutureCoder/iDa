@@ -37,16 +37,18 @@ class Admin_add_question extends CI_Controller{
      *  @Purpose:    
      *  添加题目    
      *  @Method Name:
-     *  addQuestion()    
+     *  setQuestion()    
      *  @Parameter: 
      *     
      *  @Return: 
      *  
     */
-    public function addQuestion(){
+    public function setQuestion(){
         $this->load->model('question_model');
         $this->load->library('authorizee');
         $this->load->library('session');
+        $this->load->library('cache');
+        
         
         if (!$this->authorizee->CheckAuthorizee($this->session->userdata('user_role'), 'question_add')){
             echo json_encode(array('code' => -1, 'error' => '抱歉，您的权限不足'));
@@ -69,23 +71,32 @@ class Admin_add_question extends CI_Controller{
         }
         
         
-        //选择或填空
-        //如果question_num不为''则为选择，否则为填空
+        //选择或填空或判断
         if ($this->input->post('question_num', TRUE)){
-            $clean['type'] = 'choose';
             if (!$this->input->post('question_choose')){
                 echo json_encode(array('code' => -4, 'error' => '选项不能为空'));
                 return 0;
             }
             $clean['question_choose'] = $this->input->post('question_choose', TRUE);
             
-            if (!$this->input->post('question_choose_answer', TRUE) || !ctype_alpha($this->input->post('question_choose_answer', TRUE))){
+            if (!$this->input->post('question_choose_answer', TRUE)){
                 echo json_decode(array('code' => -7, 'error' => '选项答案不能为空或非字符'));
                 return 0;
             } else {
-                $clean['question_answer'] = strtoupper($this->input->post('question_choose_answer', TRUE));
+                $question_choose_ansert = explode(' ', strtoupper($this->input->post('question_choose_answer', TRUE)));
+                $clean['question_answer'] = $question_choose_ansert;
+                
+                //判定类型多选还是单选
+                if (1 == count($question_choose_ansert)){
+                    $clean['type'] = 'choose';
+                } else if (1 < count($question_choose_ansert)) {
+                    $clean['type'] = 'multi_choose';
+                } else {
+                    echo json_encode(array('code' => -9, 'error' => '正确答案数量有误'));
+                    return 0;
+                }
             }
-        } else {
+        } else if ($this->input->post('question_fill', TRUE)) {
             //填空题
             if (!$this->input->post('question_fill', TRUE) || 300 < mb_strlen($this->input->post('question_fill', TRUE))){
                 echo json_encode(array('code' => -5, 'error' => '填空题干不能为空'));
@@ -101,13 +112,48 @@ class Admin_add_question extends CI_Controller{
             } else {
                 $clean['question_answer'] = $this->input->post('question_fill_answer', TRUE);
             }
+        } else if ($this->input->post('question_judge', TRUE)){
+            if (300 < mb_strlen($this->input->post('question_judge', TRUE))){
+                echo json_encode(array('code' => -11, 'error' => '判断题干请不要超过300个字符'));
+                return 0;                        
+            } else {
+                $clean['question_judge'] = $this->input->post('question_judge', TRUE);
+                $clean['type'] = 'judge';
+                
+                if ('on' == $this->input->post('question_judge_true', TRUE)){
+                    $clean['question_judge_true'] = 1;
+                } else {
+                    $clean['question_judge_true'] = 0;
+                }
+            }
+        } else {
+            echo json_encode(array('code' => -10, 'error' => '请在添加题目处填写正确的数据'));
+            return 0;
         }
         
         if ($this->input->post('question_private', TRUE) && 'on' == $this->input->post('question_private', TRUE)){
             $clean['question_private'] = 1;
         }  
         
-//        $this->question_model->add_question();
+        
+        if ($this->input->post('question_hint', TRUE)){
+            $clean['question_hint'] = $this->input->post('question_hint', TRUE);            
+        }
+        
+        $clean['question_add_time'] = date('Y-m-d H:i:s');
+        $clean['question_add_user_id'] = $this->session->userdata('user_id');
+        $clean['question_add_user_name'] = $this->session->userdata('user_name');
+        
+        $result = $this->question_model->addQuestion($clean);
+        
+        if (0 != $result){
+            //dump至memcache
+            $mc = $this->cache->memcache();
+            $clean['question_id'] = $result;
+            $mc->set('ida_' . $this->cache->getNS('question') . '_' . $result, $clean);
+            echo json_encode(array('code' => 1));
+        } else {
+            echo json_encode(array('code' => -8, 'error' => '插入数据失败'));
+        }
     }    
-    
 }

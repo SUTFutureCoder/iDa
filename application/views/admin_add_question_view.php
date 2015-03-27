@@ -3,11 +3,11 @@
 <head>  
     <title></title>     
     <link href="http://nws.oss-cn-qingdao.aliyuncs.com/bootstrap.min.css" rel="stylesheet">
-    
+    <link href="<?= base_url('ueditor/themes/default/css/umeditor.css')?>" type="text/css" rel="stylesheet">
 </head>
 <body>
     <br/>
-    <form action="admin_add_question/addQuestion" class="form-horizontal" role="form" id="form_add_question" method="post">
+    <form action="admin_add_question/setQuestion" class="form-horizontal" role="form" id="form_add_question" method="post">
     <div class="form-group">
         <label for="question_type" class="col-sm-2 control-label">题目类型</label>
         <div class="col-sm-9">
@@ -39,9 +39,9 @@
     </div>
     <br/>
     <div class="form-group">
-        <label for="question_choose_answer" class="col-sm-2 control-label">选择题正确答案[大写]</label>
+        <label for="question_choose_answer" class="col-sm-2 control-label">选择题正确答案</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" name="question_choose_answer" id="question_choose_answer">
+            <input type="text" class="form-control" name="question_choose_answer" placeholder="多选请用空格分离输入 A B C" id="question_choose_answer">
         </div>
     </div>
     <hr>
@@ -62,11 +62,38 @@
     <hr>
     
     <div class="form-group">
+        <label for="question_judge" class="col-sm-2 control-label">判断题干</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="question_judge" id="question_judge">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="question_judge_true" class="col-sm-2 control-label">是否正确</label>
+        <div class="col-sm-9">
+            <input type="checkbox" name="question_judge_true" id="question_judge_true" >
+        </div>
+    </div>
+    
+    <hr>
+    
+    <div class="form-group">
         <label for="question_private" class="col-sm-2 control-label">是否私有</label>
         <div class="col-sm-9">
             <input type="checkbox" name="question_private" id="question_private" >
         </div>
     </div>
+    
+    <div class="form-group">
+        <label for="question_hint" class="col-sm-2 control-label">题目提示</label>
+        <div class="col-sm-9">
+            <textarea type="text/plain" id="myEditor" name="question_hint" style="width:100%;height:240px;"></textarea>
+        </div>
+    </div>
+    
+    
+    
+    <br/>
+    <br/>
     <hr>
     <div class="col-sm-10 col-sm-offset-1">
         <input type="submit" class="form-control btn btn-success" id="submit" value="提交">
@@ -78,7 +105,9 @@
 </body>
     <script src="http://nws.oss-cn-qingdao.aliyuncs.com/jquery.min.js"></script>
     <script src="http://nws.oss-cn-qingdao.aliyuncs.com/bootstrap.min.js"></script>
-    
+    <script type="text/javascript" charset="utf-8" src="<?= base_url('ueditor/umeditor.config.js') ?>"></script>
+    <script type="text/javascript" charset="utf-8" src="<?= base_url('ueditor/umeditor.min.js') ?>"></script>
+    <script type="text/javascript" src="<?= base_url('ueditor/lang/zh-cn/zh-cn.js') ?>"></script>
     <script src="<?= base_url('js/jquery.form.js')?>"></script>
     <script>
         $(function(){
@@ -95,6 +124,8 @@
                         alert('添加成功');
                         $("#form_add_question").resetForm();
                     }
+                    $(".btn").removeAttr("disabled");
+                    $(".btn").attr("value", "添加");
                 },
                 error       : function (msg){
                     console.log(msg);
@@ -107,7 +138,6 @@
 
             $("#form_add_question").ajaxForm(options);
             
-            
             //确定选项数目
             $("#confirm_question_num").click(function(){
                 $("#question_choose_set").empty();
@@ -119,4 +149,8 @@
             });
         });   
     </script>
+    <script type="text/javascript">
+    //实例化编辑器
+    var um = UM.getEditor('myEditor');    
+</script>
 </html>

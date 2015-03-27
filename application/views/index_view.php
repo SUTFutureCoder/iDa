@@ -72,7 +72,7 @@
                     <div class="caption">
                         <h3>act_name</h3>
                         <p>act_start-act_end</p>
-                        <p><a href="#" class="btn btn-primary" role="button" onclick="joinTest()">参加</a> <a href="#" id="popover" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">关于</a></p>
+                        <p><botton  class="btn btn-primary" role="button" onclick="joinTest()">参加</botton> <botton id="popover" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">关于</botton></p>
                     </div>
                 </div>
             </div>
