@@ -67,18 +67,18 @@
         <div class="alert alert-info" role="alert">正在进行的答题</div>
         <?php if (is_array($act_list)): ?>
         <div class="row">
-            <?php foreach ($act_list as $value): ?>
+            <?php foreach ($act_list as $key => $value): ?>
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
-                    <?php if (!isset($value['act_img'])):?>
+                    <?php if (!isset($value[0]['act_img'])):?>
                         <img src="img/default.jpg" alt="...">
                     <?php else: ?>
-                        <img src="upload/act_img/<?= $value['act_img'] ?>" alt="...">
+                        <img src="upload/act_img/<?= $value[0]['act_img'] ?>" alt="...">
                     <?php endif; ?>
                     <div class="caption">
-                        <h3><?= $value['act_name']?></h3>
-                        <p><?= $value['act_comment'] ?></p>
-                        <p><botton  class="btn btn-primary" role="button" onclick="joinTest()">参加</botton> <botton id="popover" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="Dismissible popover" data-content="And here's some amazing content. It's very engaging. Right?">关于</botton></p>
+                        <h3><?= $value[0]['act_name']?></h3>
+                        <p><?= $value[0]['act_comment'] ?></p>
+                        <p><botton  class="btn btn-primary" role="button" onclick="joinTest('<?= $key ?>')">参加</botton></p>
                     </div>
                 </div>
             </div>
@@ -206,23 +206,57 @@
             </div>
         </div>
         
+        <div class="modal fade bs-example-modal-lg" id="join_test_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" id="join_test_modal_content">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td class="col-sm-2">活动名称</td><td class="join_modal_info" id="join_act_name"></td>
+                            </tr>
+                            <tr>
+                                <td>活动说明</td><td class="join_modal_info" id="join_act_comment"></td>
+                            </tr>
+                            <tr>
+                                <td>开始时间</td><td class="join_modal_info" id="join_act_start"></td>
+                            </tr>
+                            <tr>
+                                <td>结束时间</td><td class="join_modal_info" id="join_act_end"></td>
+                            </tr>
+                            <tr>
+                                <td>创建单位</td><td class="join_modal_info" id="join_act_school"></td>
+                            </tr>
+                            <tr>
+                                <td>答题时限</td><td class="join_modal_info" id="join_act_paper_time"></td>
+                            </tr>
+                            <tr>
+                                <td>规则说明</td><td class="join_modal_info" id="join_act_rule"></td>
+                            </tr>
+                            <tr>
+                                <td><button type="button" class="btn btn-default btn-block" data-dismiss="modal" >关闭</button></td>
+                                <td><form action="<?= base_url('index.php/test')?>" method="POST"><input type="text" hidden="hidden" name="act_id" id="test_post_value"><input type="submit" type="button" class="btn btn-success btn-block" value="已知晓并准备就绪"></form></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                </div>
+            </div>
+        </div>
     </div> 
 
     <script src="http://nws.oss-cn-qingdao.aliyuncs.com/jquery.min.js"></script>
     <script src="http://nws.oss-cn-qingdao.aliyuncs.com/bootstrap.min.js"></script>
     
     <script src="<?= base_url('js/jquery.form.js')?>"></script>
+    <script src="<?= base_url('js/json.js')?>"></script>
     <script>
+        <?php if (!$this->session->userdata('user_id')): ?>
         var logined = 0;
+        <?php else: ?>
+        var logined = 1;
+        <?php endif;?>
+            
         $(function(){            
-            $('#popover').mouseover(function(){
-                $(this).popover('show');
-            });  
-            
-            $('#popover').mouseleave(function(){
-               $(this).popover('hide');
-            });  
-            
             var login_options = {
                 dataType    : "json",
                 beforeSubmit: function (){
@@ -313,6 +347,7 @@
                     },
                     function (data){
                         if ('success' == data){
+                            logined = 0;
                             $(".dropdown").remove();
                             $(".navbar-right").append('<li class="active"><a id="login_button" herf="#" onclick="showLogin()">登录/注册</a></li>');
                         }
@@ -324,9 +359,39 @@
     </script>
     
     <script>
-        function joinTest(){
-            if (logined = 0){
-                $('#loginModal').modal('toggle');
+        function joinTest(act_id){           
+            
+            if (logined == 0){
+                showLogin();
+            } else {
+                $(".join_modal_info").empty();
+                $.post(
+                    '<?= base_url('index.php/index/getActInfo')?>',
+                    {
+                        act_id : act_id
+                    },
+                    function (data){
+                        var data = JSON.parse(data); 
+                        if ('1' == data['code']){
+//                            console.log(data['act_info'])
+                            $("#join_act_name").html(data['act_info']['act_name']);
+                            $("#join_act_comment").html(data['act_info']['act_comment']);
+                            $("#join_act_start").html(data['act_info']['act_start']);
+                            $('#join_act_end').html(data['act_info']['act_end']);
+                            $('#join_act_school').html(data['act_info']['act_school']);
+                            $('#join_act_paper_time').html(data['act_info']['act_paper_time']);
+                            $('#join_act_rule').html(data['act_info']['act_rule']);
+                            
+                            
+                            $('#test_post_value').attr('value', act_id);
+                            
+                            
+                            $('#join_test_modal').modal('toggle');
+                        } else {
+                            alert(data['error']);
+                        }
+                    }
+                ) 
             }
         }
         
@@ -342,6 +407,8 @@
             $('#registerImg').attr('src', '<?php echo base_url('/index.php/index/setValidateCode/setValidateCode');?>');
             $('#registerModal').modal('toggle');
         }
+        
+        
     </script>
     </body>
 </html>

@@ -2,6 +2,7 @@
 <html>  
 <head>  
     <title></title>     
+    <meta charset="utf-8">
     <link href="http://nws.oss-cn-qingdao.aliyuncs.com/bootstrap.min.css" rel="stylesheet">
     <link href="<?= base_url('ueditor/themes/default/css/umeditor.css')?>" type="text/css" rel="stylesheet">
 </head>
@@ -14,6 +15,7 @@
             <input type="text" class="form-control" name="question_type" id="question_type">
         </div>
     </div>
+    
     <div class="form-group">
         <label for="question_content" class="col-sm-2 control-label">题目正文</label>
         <div class="col-sm-9">
@@ -47,12 +49,6 @@
     <hr>
     
     <div class="form-group">
-        <label for="question_fill" class="col-sm-2 control-label">填空</label>
-        <div class="col-sm-9">
-            <input type="text" class="form-control" name="question_fill" id="question_fill">
-        </div>
-    </div>
-    <div class="form-group">
         <label for="question_fill_answer" class="col-sm-2 control-label">填空答案</label>
         <div class="col-sm-9">
             <input type="text" class="form-control" name="question_fill_answer" id="question_fill_answer">
@@ -62,9 +58,9 @@
     <hr>
     
     <div class="form-group">
-        <label for="question_judge" class="col-sm-2 control-label">判断题干</label>
+        <label for="question_judge" class="col-sm-2 control-label">是否为判断题</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" name="question_judge" id="question_judge">
+            <input type="checkbox" name="question_judge" id="question_judge" >
         </div>
     </div>
     <div class="form-group">
@@ -75,6 +71,13 @@
     </div>
     
     <hr>
+    
+    <div class="form-group">
+        <label for="question_score" class="col-sm-2 control-label">题目分值</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="question_score" id="question_score">
+        </div>
+    </div>
     
     <div class="form-group">
         <label for="question_private" class="col-sm-2 control-label">是否私有</label>
@@ -111,33 +114,33 @@
     <script src="<?= base_url('js/jquery.form.js')?>"></script>
     <script>
         $(function(){
-            var options = {
-                dataType    : "json",
-                beforeSubmit: function (){
-                    $(".btn").attr("value", "正在提交中……请稍后");
-                    $(".btn").attr("disabled", "disabled");
-                },
-                success     : function (data){
-                    if (1 != data['code']){
-                        alert(data['error']);
-                    } else {
-                        alert('添加成功');
-                        $("#form_add_question").resetForm();
-                    }
-                    $(".btn").removeAttr("disabled");
-                    $(".btn").attr("value", "添加");
-                },
-                error       : function (msg){
-                    console.log(msg);
-                    alert("操作失败");
-                    $(".btn").removeAttr("disabled");
-                    $(".btn").attr("value", "添加");
-                }
-
-            };
-
-            $("#form_add_question").ajaxForm(options);
-            
+//            var options = {
+//                dataType    : "json",
+//                beforeSubmit: function (){
+//                    $(".btn").attr("value", "正在提交中……请稍后");
+//                    $(".btn").attr("disabled", "disabled");
+//                },
+//                success     : function (data){
+//                    if (1 != data['code']){
+//                        alert(data['error']);
+//                    } else {
+//                        alert('添加成功');
+//                        $("#form_add_question").resetForm();
+//                    }
+//                    $(".btn").removeAttr("disabled");
+//                    $(".btn").attr("value", "添加");
+//                },
+//                error       : function (msg){
+//                    console.log(msg);
+//                    alert("操作失败");
+//                    $(".btn").removeAttr("disabled");
+//                    $(".btn").attr("value", "添加");
+//                }
+//
+//            };
+//
+//            $("#form_add_question").ajaxForm(options);
+//            
             //确定选项数目
             $("#confirm_question_num").click(function(){
                 $("#question_choose_set").empty();

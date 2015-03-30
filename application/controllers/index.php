@@ -36,12 +36,13 @@ class Index extends CI_Controller{
         $mc = $this->cache->memcache();
         
         //获取活动列表
-        
         if (!$data = $mc->get('ida_' . $this->cache->getNS('act') . '_ing_list')){
             $data = $this->act_model->getActList();
             //保存一天
-            $mc->set('ida_' . $this->cache->getNS('act') . '_ing_list', $data, 0, 86400);
+//            $mc->set('ida_' . $this->cache->getNS('act') . '_ing_list', $data, 86400);
+            $mc->set('ida_' . $this->cache->getNS('act') . '_ing_list', $data, 5);
         }
+        
         $this->load->view('index_view', array(
             'act_list' => $data   
         ));
@@ -241,6 +242,44 @@ class Index extends CI_Controller{
         if ('1' == $this->input->post('logout', TRUE)){
             $this->session->sess_destroy();
             echo 'success';
+        }
+    }
+    
+    
+    
+    /**    
+     *  @Purpose:    
+     *  获取活动信息    
+     *  @Method Name:
+     *  getActInfo()    
+     *  @Parameter: 
+     * 
+     * 
+     *  @Return: 
+     *  
+    */
+    public function getActInfo(){
+        $this->load->library('session');
+        $this->load->library('cache');
+        $this->load->model('act_model');
+        
+        if (!$this->session->userdata('user_id')){
+            echo json_encode(array('code' => -1, 'error' => '请您登录后查看'));
+            return 0;
+        }
+        
+        $mc = $this->cache->memcache();
+        
+        if (!$data = $mc->get('ida_' . $this->cache->getNS('act') . '_act_' . $this->input->post('act_id', TRUE))){
+            if ($result = $this->act_model->getActInfoById($this->input->post('act_id', TRUE))){
+                $mc->set('ida_' . $this->cache->getNS('act') . '_act_' . $this->input->post('act_id', TRUE), $result);
+                echo json_encode(array('code' => 1, 'act_info' => $result));
+            } else {
+                echo json_encode(array('code' => -2, 'error' => '未检索到您的活动'));
+                return 0;
+            }
+        } else {
+            echo json_encode(array('code' => 1, 'act_info' => $data));
         }
     }
 }

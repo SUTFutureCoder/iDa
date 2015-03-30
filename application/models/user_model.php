@@ -96,11 +96,13 @@ class User_model extends CI_Model{
         $db = $this->database->conn();
         $cursor = $db->ida->user->find(array('user_telephone' => $user_telephone));
         foreach ($cursor as $key => $value){
-            if (!$key){
-                return 0;
-            } else {
-                return 1;
-            }
+            
         }
+        if (!isset($key)){
+            return 0;
+        } else {
+            return 1;
+        }
+        
     }
 }

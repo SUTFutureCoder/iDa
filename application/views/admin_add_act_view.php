@@ -3,7 +3,7 @@
 <head>  
     <title></title>     
     <link href="http://nws.oss-cn-qingdao.aliyuncs.com/bootstrap.min.css" rel="stylesheet">
-    
+    <link href="<?= base_url('ueditor/themes/default/css/umeditor.css')?>" type="text/css" rel="stylesheet">
 </head>
 <body>
     <br/>
@@ -18,6 +18,12 @@
         <label for="act_comment" class="col-sm-2 control-label">活动说明</label>
         <div class="col-sm-9">
             <textarea class="form-control" name="act_comment" id="act_comment" rows="3"></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="act_rule" class="col-sm-2 control-label">规则说明</label>
+        <div class="col-sm-9">
+            <textarea class="form-control" name="act_rule" id="myEditor" style="width:100%;height:240px;"></textarea>
         </div>
     </div>
     <hr>    
@@ -69,28 +75,28 @@
     <div class="form-group">
         <label for="act_question_choose_sum" class="col-sm-2 control-label">单选数量</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" name="act_question_choose_sum" id="act_question_choose_sum">
+            <input type="text" class="form-control" name="act_question_choose_sum" value="0" id="act_question_choose_sum">
         </div>
     </div>
     
     <div class="form-group">
         <label for="act_question_multi_choose_sum" class="col-sm-2 control-label">多选数量</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" name="act_question_multi_choose_sum" id="act_question_multi_choose_sum">
+            <input type="text" class="form-control" name="act_question_multi_choose_sum" value="0" id="act_question_multi_choose_sum">
         </div>
     </div>
     
     <div class="form-group">
         <label for="act_question_judge_sum" class="col-sm-2 control-label">判断数量</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" name="act_question_judge_sum" id="act_question_judge_sum">
+            <input type="text" class="form-control" name="act_question_judge_sum" value="0" id="act_question_judge_sum">
         </div>
     </div>
     
     <div class="form-group">
         <label for="act_question_fill_sum" class="col-sm-2 control-label">填空数量</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" name="act_question_fill_sum" id="act_question_fill_sum">
+            <input type="text" class="form-control" name="act_question_fill_sum" value="0" id="act_question_fill_sum">
         </div>
     </div>
     
@@ -115,9 +121,13 @@
 </body>
     <script src="http://nws.oss-cn-qingdao.aliyuncs.com/jquery.min.js"></script>
     <script src="http://nws.oss-cn-qingdao.aliyuncs.com/bootstrap.min.js"></script>
-    
+    <script type="text/javascript" charset="utf-8" src="<?= base_url('ueditor/umeditor.config.js') ?>"></script>
+    <script type="text/javascript" charset="utf-8" src="<?= base_url('ueditor/umeditor.min.js') ?>"></script>
+    <script type="text/javascript" src="<?= base_url('ueditor/lang/zh-cn/zh-cn.js') ?>"></script>
     <script src="<?= base_url('js/jquery.form.js')?>"></script>
     <script>
+        //实例化编辑器
+        var um = UM.getEditor('myEditor');    
         $(function(){
             var options = {
                 dataType    : "json",

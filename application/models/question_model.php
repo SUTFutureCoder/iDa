@@ -98,13 +98,38 @@ class Question_model extends CI_Model{
         $cursor = $db->ida->question->find(array('type' => $type, 'question_type' => $question_type), array('question_id' => 1));
         
         foreach ($cursor as $key => $value){
-            if (!$key){
-                return 0;
-            } else {
-                $data[] = $value;
-            }
+            $data[] = $value['question_id'];
+        }
+        if (!isset($key)){
+            return 0;
         }
         
+        return $data;
+    }
+    
+    /**    
+     *  @Purpose:    
+     *  通过id获取问题
+     *  @Method Name:
+     *  getQuestionById($question_id)
+     *  @Parameter: 
+     *  int $question_id 问题id
+     *  @Return: 
+     *  0 无数据
+     *  array $data 问题数据(单值)
+    */ 
+    public function getQuestionById($question_id){
+        $this->load->library('database');
+        
+        $db = $this->database->conn();
+        $cursor = $db->ida->question->find(array('question_id' => (int)$question_id));
+        
+        foreach ($cursor as $key => $value){
+            $data = $value;
+        }
+        if (!isset($key)){
+            return 0;
+        }
         return $data;
     }
 }

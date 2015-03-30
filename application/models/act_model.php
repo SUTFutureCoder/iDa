@@ -56,16 +56,50 @@ class Act_model extends CI_Model{
         $this->load->library('database');
         $db = $this->database->conn();
         
-        $cursor = $db->ida->act->find(array('act_start' => array('$lt' => date('Y-m-d H:i:s')), 'act_end' => array('$gt' => date('Y-m-d H:i:s'))));
+        $cursor = $db->ida->act->find(array('act_start' => array('$lt' => date('Y-m-d H:i:s')), 'act_end' => array('$gt' => date('Y-m-d H:i:s'))), array('act_name' => 1, 'act_comment' => 1, 'act_start' => 1, 'act_end' => 1, 'act_img' => 1));
         
         $act_list = array();
         
         foreach ($cursor as $key => $value){
-            if (!$key){
-                return 0;
-            }
-            $act_list[] = $value;
+            $act_list[$key][] = $value;
+        }
+        
+        if (!isset($key)){
+            return 0;
         }
         return $act_list;
+    }
+    
+    /**    
+     *  @Purpose:    
+     *  通过活动id获取活动信息
+     *  @Method Name:
+     *  getActInfoById($id)    
+     *  @Parameter: 
+     *  string objectId($id) 活动标识ID
+     *  @Return: 
+     *  0 无列表
+     *  array $act_list 活动列表
+    */ 
+    public function getActInfoById($id){
+        $this->load->library('database');
+        $db = $this->database->conn();
+        
+        try{
+            $cursor = $db->ida->act->find(array('_id' => new MongoId("$id")));
+        } catch (Exception $ex) {
+            return 0;
+        }
+        
+        
+        foreach ($cursor as $key => $value){
+            
+            $act_info = $value;
+        }
+        if (!isset($key)){
+            return 0;
+        }
+    
+        return $act_info;
     }
 }

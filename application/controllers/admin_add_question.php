@@ -70,6 +70,13 @@ class Admin_add_question extends CI_Controller{
             $clean['question_content'] = $this->input->post('question_content', TRUE);
         }
         
+        if (!$this->input->post('question_score', TRUE) || !ctype_digit($this->input->post('question_score', TRUE))){
+            echo json_encode(array('code' => -12, 'error' => '抱歉，请输入有效的分值'));
+            return 0;
+        } else {
+            $clean['question_content'] = $this->input->post('question_content', TRUE);
+        }
+        
         
         //选择或填空或判断
         if ($this->input->post('question_num', TRUE)){
@@ -96,35 +103,23 @@ class Admin_add_question extends CI_Controller{
                     return 0;
                 }
             }
-        } else if ($this->input->post('question_fill', TRUE)) {
-            //填空题
-            if (!$this->input->post('question_fill', TRUE) || 300 < mb_strlen($this->input->post('question_fill', TRUE))){
-                echo json_encode(array('code' => -5, 'error' => '填空题干不能为空'));
-                return 0;
-            } else {
-                $clean['type'] = 'fill';
-                $clean['question_fill'] = $this->input->post('question_fill', TRUE);
-            }
-            
+        } else if ($this->input->post('question_fill_answer', TRUE)) {
+            //填空题            
             if (!$this->input->post('question_fill_answer', TRUE) || 300 < mb_strlen($this->input->post('question_fill_answer',TRUE))){
                 echo json_encode(array('code' => -6, 'error' => '填空题答案不能为空'));
                 return 0;
             } else {
+                $clean['type'] = 'fill';
                 $clean['question_answer'] = $this->input->post('question_fill_answer', TRUE);
             }
-        } else if ($this->input->post('question_judge', TRUE)){
-            if (300 < mb_strlen($this->input->post('question_judge', TRUE))){
-                echo json_encode(array('code' => -11, 'error' => '判断题干请不要超过300个字符'));
-                return 0;                        
+            
+        } else if ('on' == $this->input->post('question_judge', TRUE)){
+            $clean['type'] = 'judge';
+
+            if ('on' == $this->input->post('question_judge_true', TRUE)){
+                $clean['question_answer'] = 1;
             } else {
-                $clean['question_judge'] = $this->input->post('question_judge', TRUE);
-                $clean['type'] = 'judge';
-                
-                if ('on' == $this->input->post('question_judge_true', TRUE)){
-                    $clean['question_judge_true'] = 1;
-                } else {
-                    $clean['question_judge_true'] = 0;
-                }
+                $clean['question_answer'] = 0;
             }
         } else {
             echo json_encode(array('code' => -10, 'error' => '请在添加题目处填写正确的数据'));
@@ -156,10 +151,7 @@ class Admin_add_question extends CI_Controller{
             if (!$data = $mc->get('ida_' . $this->cache->getNS('question_type') . '_' . $clean['question_type'] . '_' . $clean['type'])){
                 //从数据库中dump到分类
                 if ($question_id_set = $this->question_model->dumpQuestion($clean['question_type'], $clean['type'])){
-                    foreach ($question_id_set as $value){
-                        $question_id[] = $value;
-                    }
-                    $mc->set('ida_' . $this->cache->getNS('question_type') . '_' . $clean['question_type'] . '_' . $clean['type'], $question_id);
+                    $mc->set('ida_' . $this->cache->getNS('question_type') . '_' . $clean['question_type'] . '_' . $clean['type'], $question_id_set);
                 } else {
                     //之前没有数据
                     $question_id[0] = $clean['question_id'];

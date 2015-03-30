@@ -89,6 +89,13 @@ class Admin_add_act extends CI_Controller{
             $clean['act_comment'] = $this->input->post('act_comment', TRUE);
         }
         
+        if (!$this->input->post('act_rule', TRUE)){
+            echo json_encode(array('code' => -16, 'error' => '抱歉，请输入活动规则说明'));
+            return 0;     
+        } else {
+            $clean['act_rule'] = $this->input->post('act_rule', TRUE);
+        }
+        
         if ('on' == $this->input->post('act_private')){
             $clean['act_private'] = 1;            
         }
@@ -146,9 +153,11 @@ class Admin_add_act extends CI_Controller{
             $clean['act_question_fill_sum'] = $this->input->post('act_question_fill_sum', TRUE);
         }
         
-        if (!ctype_digit($this->input->post('act_paper_time', TRUE))){
+        if (!$this->input->post('act_paper_time', TRUE) || !ctype_digit($this->input->post('act_paper_time', TRUE))){
             echo json_encode(array('code' => -8, 'error' => '抱歉，答题时间限制需要为数字'));
             return 0;
+        } else {
+            $clean['act_paper_time'] = $this->input->post('act_paper_time', TRUE);
         }
         
         //预览图
@@ -179,10 +188,13 @@ class Admin_add_act extends CI_Controller{
         $clean['act_add_user_id'] = $this->session->userdata('user_id');
         $clean['act_add_time'] = date('Y-m-d H:i:s');
         
-        if (!$this->act_model->setAct($clean)){
+        if (!$id = $this->act_model->setAct($clean)){
             echo json_encode(array('code' => -15, 'error' => '插入失败'));
             return 0;
         } else {
+            $mc = $this->cache->memcache();
+            $mc->set('ida_' . $this->cache->getNS('act') . '_act_' . $id, $clean);
+                
             echo json_encode(array('code' => 1));
             return 0;
         }

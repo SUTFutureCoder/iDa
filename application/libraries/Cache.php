@@ -20,8 +20,8 @@ class Cache{
         if (self::$_mc){
             return self::$_mc;
         } else {
-            self::$_mc = new Memcache;            
-            self::$_mc->connect('127.0.0.1', 11211) or die('链接失败！');            
+            self::$_mc = new Memcached();  
+            self::$_mc->addServer('127.0.0.1', 11211);
             return self::$_mc;
         }
     }
@@ -39,8 +39,8 @@ class Cache{
     */
     static public function setNS($type){
         if (!self::$_mc){
-            self::$_mc = new Memcache;            
-            self::$_mc->connect('127.0.0.1', 11211) or die('链接失败！');  
+            self::$_mc = new Memcached(); 
+            self::$_mc->addServer('127.0.0.1', 11211);
         }
         
         switch ($type){
@@ -91,8 +91,8 @@ class Cache{
     */
     static public function getNS($type){
         if (!self::$_mc){
-            self::$_mc = new Memcache;  
-            self::$_mc->connect('127.0.0.1', 11211) or die('链接失败！');  
+            self::$_mc = new Memcached();  
+            self::$_mc->addServer('127.0.0.1', 11211);
         }
         
         switch ($type){
