@@ -74,7 +74,7 @@ class Admin_add_question extends CI_Controller{
             echo json_encode(array('code' => -12, 'error' => '抱歉，请输入有效的分值'));
             return 0;
         } else {
-            $clean['question_content'] = $this->input->post('question_content', TRUE);
+            $clean['question_score'] = $this->input->post('question_score', TRUE);
         }
         
         

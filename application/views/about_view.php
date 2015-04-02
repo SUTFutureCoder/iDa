@@ -65,6 +65,7 @@
         <br/>
         <br/>
         <div class="well well-lg">
+            <h4>本系统每十分钟自动保存一次，且在点击完成按钮之前继续答题</h4>
             <h4>开发者+运维 QQ：506200331</h4>
             <hr/>
             <h5>"If you always put limits on everything you do, physical or anything else, it will spread into your work and into your life. There are no limits. There are only plateaus, and you must not stay there, you must go beyond them." - Bruce Lee</h5>

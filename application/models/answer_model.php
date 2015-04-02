@@ -59,7 +59,8 @@ class Answer_model extends CI_Model{
      *  string $act_id  活动id
      * 
      *  @Return: 
-     *  array (0 => array ('question_id' => 0, 'question_answer' => 'A B C'), '1' => '')
+     *  0 用户未参与此问卷
+     *  $data 用户回答记录
     */
     public function getUserHistoryAnswer($user_id, $act_id){
         $this->load->library('database');
@@ -71,6 +72,11 @@ class Answer_model extends CI_Model{
         foreach ($cursor as $key => $value){
             $data = $value;
         }
+        
+        if (!isset($key)){
+            return 0;
+        }
+        
         return $data;
     }
     /**    
@@ -98,4 +104,49 @@ class Answer_model extends CI_Model{
             return 0;
         }
     }
+    
+    /**    
+     *  @Purpose:    
+     *  更新回答    
+     *  @Method Name:
+     *  setSaveAnswer($user_id, $act_id, $answer_data)   
+     *  @Parameter: 
+     *  array $answer_data 用户即时回答
+     * 
+     *  @Return: 
+     *  0 失败
+     *  1 成功
+    */
+    public function setSaveAnswer($user_id, $act_id, $answer_data){
+        $this->load->library('database');
+        $db = $this->database->conn();
+        $result = $db->ida->answer->update(array('user_id' => $user_id, 'act_id' => $act_id), array('$set' => array('user_answer_list' => $answer_data)));
+        return $result;
+    } 
+    
+    /**    
+     *  @Purpose:    
+     *  更新分数    
+     *  @Method Name:
+     *  setScore($user_id, $act_id, $score, $fin)   
+     *  @Parameter: 
+     *  $score 分数
+     *  $fin   终结答卷
+     *  @Return: 
+     *  0 失败
+     *  1 成功
+    */
+    public function setScore($user_id, $act_id, $score, $fin){
+        $this->load->library('database');
+        $db = $this->database->conn();
+        if ($fin){
+            $result = $db->ida->answer->update(array('user_id' => $user_id, 'act_id' => $act_id), array('$set' => array('answer_score' => $score, 'end_time' => date('Y-m-d H:i:s'))));
+        }else {
+            $result = $db->ida->answer->update(array('user_id' => $user_id, 'act_id' => $act_id), array('$set' => array('answer_score' => $score)));
+        }
+        
+        return $result;
+    } 
+    
+    
 }

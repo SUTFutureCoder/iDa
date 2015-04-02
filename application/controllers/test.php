@@ -96,6 +96,7 @@ class Test extends CI_Controller{
         $question_id_list = array();
         $question_data_list = array();
         $null = null;
+        $question_score_list = array();
         
         //choose
         if ($choose_sum = $act_data['act_question_choose_sum']){
@@ -183,6 +184,7 @@ class Test extends CI_Controller{
         foreach ($question_data_list as $value){
             $db_data['question_id_list'][] = $value['question_id'];
             $db_data['correct_answer_list'][] = $value['question_answer'];
+            $db_data['question_socre_list'][] = $value['question_score'];
 //            $db_data['user_answer_list'][] = 0;
         }
         
@@ -198,7 +200,6 @@ class Test extends CI_Controller{
         $this->load->view('test_view', array('new_act' => 1,
             'question_data_list' => $question_data_list,
             'user_act_data' => $db_data));
-        
     }
     
     /**    
@@ -277,5 +278,112 @@ class Test extends CI_Controller{
             }
         }
         return $item;
+    }
+    
+    
+    /**    
+     *  @Purpose:    
+     *  保存或完成答卷    
+     *  @Method Name:
+     *  saveAnswer()
+     *  @Parameter: 
+     *  @Return: 
+     *  0 未找到
+     *  array $data 完全填充问题列表 
+    */
+    public function saveAnswer(){
+        $this->load->library('session');
+        $this->load->model('answer_model');
+        
+        
+        if (!$this->session->userdata('user_id')){
+            echo json_encode(array('code' => -1, 'error' => '抱歉，您的会话失效。请重新登录'));
+            return 0;
+        }
+        
+        $answer_data = array();
+        $answer_data = json_decode($this->input->post('answer_data', TRUE), TRUE);
+        
+        if (!$this->input->post('answer_data', TRUE) || !$this->input->post('act_id', TRUE)){
+            echo json_encode(array('code' => -2, 'error' => '抱歉，数据传递出现意外'));
+            return 0;
+        }
+            
+        if (!$data = $this->answer_model->getUserHistoryAnswer($this->session->userdata('user_id', TRUE), $this->input->post('act_id', TRUE))){
+            echo json_encode(array('code' => -3, 'error' => '抱歉，该用户未参与此活动'));
+            return 0;
+        }
+        
+        if ($this->input->post('fin', TRUE)){
+            if (date('Y-m-d H:i:s', time() + 3 * 60) < $data['end_time']){
+                //计算分数
+                $this->answer_model->setSaveAnswer($this->session->userdata('user_id', TRUE), $this->input->post('act_id', TRUE), $answer_data);
+                $score = $this->calcScore($this->session->userdata('user_id', TRUE), $this->input->post('act_id', TRUE));
+                echo json_encode(array('code' => 1, 'message' => '您的分数为 ' . $score . ' ，感谢您的参与！'));
+                return 0;
+            } else {
+                echo json_encode(array('code' => -5, 'error' => '答题已经结束，感谢您的参与'));
+                return 0;
+            }
+        } 
+        
+        if (date('Y-m-d H:i:s') <= $data['end_time']){
+            //允许保存
+            $result = $this->answer_model->setSaveAnswer($this->session->userdata('user_id', TRUE), $this->input->post('act_id', TRUE), $answer_data);
+            if ($result["ok"]){
+                echo json_encode(array('code' => 1));
+                return 0;
+            }
+        } else {
+            echo json_encode(array('code' => -4, 'error' => '抱歉，您的答题时间已过'));
+            return 0;
+        }
+    }
+    
+    /**    
+     *  @Purpose:    
+     *  计算分数    
+     *  @Method Name:
+     *  calcScore($user_id, $act_id)
+     *  @Parameter: 
+     *  
+     *  @Return: 
+     *  score 分数
+    */
+    private function calcScore($user_id, $act_id){
+        //防止出现意外，以数据库数据为准
+        $this->load->library('session');
+        $this->load->model('answer_model');
+        
+        $data = $this->answer_model->getUserHistoryAnswer($user_id, $act_id);
+        
+        $length = count($data['correct_answer_list']);
+
+        $score = 0;
+        
+        for ($i = 0; $i < $length; $i++){
+            //（单/多）选题
+            if (is_array($data['correct_answer_list'][$i])){
+                if (!isset($data['correct_answer_list'][$i][1])){
+                    //单选题
+                    if ($data['correct_answer_list'][$i][0] == $data['user_answer_list'][$i]){
+                        $score += (int)$data['question_socre_list'][$i];
+                    }
+                } else {
+                    //多选题
+                    if (implode(' ', $data['correct_answer_list'][$i]) == $data['user_answer_list'][$i]){
+                        $score += (int)$data['question_socre_list'][$i];
+                    }
+                }
+            } else {
+                //填空或判断题
+                if ($data['correct_answer_list'][$i] == $data['user_answer_list'][$i]){
+                    $score += (int)$data['question_socre_list'][$i];
+                }
+            }
+        }
+        
+        $this->answer_model->setScore($user_id, $act_id, $score, 1);
+        return $score;
     }
 }

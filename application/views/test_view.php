@@ -30,8 +30,9 @@
     <?php else: ?>
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
-            <div class="alert alert-success navbar-fixed-top" role="alert">距离结束还有<a id="time_counter_hour"></a>时<a id="time_counter_minute"></a>分<a id="time_counter_second"></a>秒 <button type="button" class="btn btn-danger navbar-right">完成</button></div>
+            <div class="alert alert-success navbar-fixed-top" role="alert">距离结束还有<a id="time_counter_hour"></a>时<a id="time_counter_minute"></a>分<a id="time_counter_second"></a>秒 <button type="button" onclick="$('#finish_modal').modal('toggle')" class="btn btn-danger navbar-right col-sm-offset-1">完成</button><button type="button" onclick="save(0)" class="btn btn-success navbar-right col-sm-offset-1" id="save_button" data-container="body" data-toggle="popover" data-placement="bottom" data-content="保存成功">保存</button></div>
         </div>
+        
     </nav>
     <br/>
     <br/>
@@ -39,7 +40,8 @@
     
     <?php $now_type = ''; ?>
     <?php $question_id = 1; ?>
-    <?php foreach ($question_data_list as $key => $value):?>
+    <?php $question_sum = count($question_data_list) ?>
+    <?php foreach ($question_data_list as $key => $value): ?>
         <?php if ($now_type != $value['type']): ?>
             <?php switch ($value['type']){
                 case 'choose' :
@@ -57,36 +59,38 @@
             }
             ?>
             <hr>
-        <?php $now_type = $value['type']?>
+        <?php $now_type = $value['type'] ?>
         <?php endif; ?>
             <div class="panel panel-default">
-                <div class="panel-heading"><?= $question_id?> . <?= $value['question_content']?></div>
+                <div class="panel-heading"><?= $question_id ?> . <?= $value['question_content'] ?></div>
                 <div class="panel-body">
                     <form>
                         <?php if ($value['type'] == 'choose'): ?>
-                            <div class="form-group question_choose" id="<?= $value['question_id']?>">
-                            <?php foreach ($value['question_choose'] as $question_choose):?>
-                                <input type="radio"  name="<?= $value['question_id']?>" value="<?= $question_choose?>"><?= $question_choose?><br/>
+                            <div class="form-group question_choose" id="question_<?= $question_id - 1 ?>" question_type="choose" question_id="<?= $value['question_id']?>">
+                            <?php $choose_option = 'A'?>
+                            <?php foreach ($value['question_choose'] as $question_choose): ?>
+                                <input type="radio"  name="<?= $value['question_id'] ?>" value="<?= $choose_option++?>"><?= $question_choose?><br/>
                             <?php endforeach;?>
                             </div>
                         <?php endif; ?>
 
                         <?php if ($value['type'] == 'multi_choose'): ?>
-                            <div class="form-group question_multi_choose" id="<?= $value['question_id']?>">
-                            <?php foreach ($value['question_choose'] as $question_choose):?>
-                                <input type="checkbox"><?= $question_choose?><br/>
+                            <div class="form-group question_multi_choose" id="question_<?= $question_id - 1 ?>" question_type="multi_choose" question_id="<?= $value['question_id'] ?>">
+                            <?php $choose_option = 'A'?>
+                            <?php foreach ($value['question_choose'] as $question_choose): ?>
+                                <input type="checkbox" value="<?= $choose_option++ ?>"><?= $question_choose ?><br/>
                             <?php endforeach;?>
                             </div>
                         <?php endif; ?>
 
                         <?php if ($value['type'] == 'fill'): ?>
-                            <div class="form-group question_fill" id="<?= $value['question_id']?>">
+                            <div class="form-group question_fill" id="question_<?= $question_id - 1 ?>" question_type="fill" question_id="<?= $value['question_id'] ?>">
                                 <input type="text" class="form-control">
                             </div>
                         <?php endif; ?>
 
                         <?php if ($value['type'] == 'judge'): ?>
-                            <div class="form-group question_judge" id="<?= $value['question_id']?>">
+                            <div class="form-group question_judge" id="question_<?= $question_id - 1 ?>" question_type="judge" question_id="<?= $value['question_id'] ?>">
                                 <input type="checkbox" >正确
                             </div>
                         <?php endif; ?>
@@ -94,11 +98,11 @@
                 </div>
             </div>
             <br/>
-        <?php $question_id++?>
+        <?php $question_id++ ?>
     <?php endforeach; ?>
 <?php endif; ?>
                     
-    <?php if (isset($out_of_time) && $out_of_time):?>
+    <?php if (isset($out_of_time) && $out_of_time): ?>
     <div class="panel panel-default ">
         <div class="panel-heading">此活动未开始或已过期</div>
         <table class="table">
@@ -109,19 +113,36 @@
     </div>
     <?php endif;?>
     </div>
+    
+    
+    <div class="modal fade bs-example-modal-sm" id="finish_modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                
+            <div class="modal-body">
+                <h2>您确定完成答卷吗？</h2>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" onclick="save(1)" class="btn btn-danger">确定</button>
+            </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 </body>
     <script src="http://nws.oss-cn-qingdao.aliyuncs.com/jquery.min.js"></script>
     <script src="http://nws.oss-cn-qingdao.aliyuncs.com/bootstrap.min.js"></script>    
     <script>
+        var savetime = new Date().getTime();
         <?php if (isset($user_act_data)): ?>
             //开始倒计时
             var runtimes = 0;
             var left_time = <?= $user_act_data['left_time'] ?>;
             //倒计时
-            setInterval("time_counter()",1000);
+            setInterval("time_counter()", 1000);
             
             //自动保存
-            setInterval("save()",1000);
+            setInterval("save(0)", 600000);
             
             function time_counter(){
                 var MS = left_time * 1000 - runtimes * 1000;
@@ -147,5 +168,150 @@
                 }
             }
         <?php endif; ?>
+            
+            
+        <?php if (isset($user_act_data['user_answer_list'])): ?>
+            //开始恢复数据
+            <?php foreach ($user_act_data['user_answer_list'] as $key => $value): ?>
+                switch ($("#question_<?= $key ?>").attr('question_type')){
+                    case 'choose':
+                        $("#question_<?= $key ?> input[value='<?= $value ?>']").attr('checked', 'checked');
+                        break;
+                    case 'multi_choose':
+                        var multi_choose_data_array = new Array();
+                        var multi_choose_data = '<?= $value ?>';
+                        multi_choose_data_array = multi_choose_data.split(' ');
+                        
+                        for (var i in multi_choose_data_array){
+                            $("#question_<?= $key ?> input[value='"+ multi_choose_data_array[i] +"']").attr('checked', 'checked');
+                        }
+                        break;
+                    case 'fill':
+                        $("#question_<?= $key ?> input").val('<?= $value ?>');
+                        break;
+                    case 'judge':
+                        <?php if ($value): ?>
+                                $("#question_<?= $key ?> input").prop('checked', 'checked');
+                        <?php endif;?>
+                        break;
+                }
+            <?php endforeach; ?>
+        <?php endif;?>
+            
+        <?php if(!isset($answer_fin)): ?>
+        function save(fin){
+            if ((new Date().getTime()) <= (savetime + 1000)){
+                alert('您的保存过于频繁，请休息一下～');
+                return 0;
+            }
+            
+            var json = '{';
+            for (i = 0; i < <?= $question_sum ?>; i++){
+                if (i != 0){
+                    json += ', '
+                }
+                switch ($('#question_' + i).attr('question_type')){
+                    case 'choose':
+                        if (!$('#question_' + i + ' input:checked').attr('value')){
+                            json += '"' + i + '" : ""';
+                        } else {
+//                            alert($('#question_' + i + ' input:checked').attr('value'));
+                            json += '"' + i + '" : "' + ($("#question_" + i + " input:checked").attr("value")) + '"';
+                        }
+                        break;
+                        
+                    case 'multi_choose':
+                        json += '"' + i + '" : "';
+                        var multi_choose_count = $('#question_' + i + ' input:checked').length
+                        if (multi_choose_count){
+                            var multi_choose = 0;
+                            
+                            $('#question_' + i + ' input:checked').each(function(){
+                                json += ($(this).attr('value'));
+                                if (multi_choose != multi_choose_count - 1){
+                                    json += ' ';
+                                }
+                                multi_choose++;
+//                                alert($(this).attr('value'));
+                            });
+                        }
+                        json += '"';
+                        break;
+                        
+                    case 'fill':
+                            json += '"' + i + '" : "' + ($('#question_' + i + ' input').val()) + '"';
+//                        alert($('#question_' + i + ' input').val());
+                        break;
+
+                    case 'judge':
+                        if (true == $('#question_' + i + ' input').prop('checked')){
+//                            alert('true');
+                            json += '"' + i + '" : "1"';
+                        } else {
+//                            alert('false');
+                            json += '"' + i + '" : "0"';
+                        }
+//                        alert($('#question_' + i + ' input').prop('checked'));
+                        break;
+                }
+            }
+            json += '}';
+            
+            if (!fin){
+                $.post(
+                    '<?= base_url('index.php/test/saveAnswer')?>',
+                    {
+                        answer_data : json,
+                        act_id : '<?= $user_act_data['act_id'] ?>',
+                        fin : 0
+                    },
+                    function (data){
+                        var data = JSON.parse(data);
+                        switch (data['code']){
+                            case 1:
+                                //保存成功
+                                savetime = new Date().getTime();
+                                $("#save_button").popover('toggle');
+                                window.setTimeout(function (){
+                                    $("#save_button").popover('toggle');
+                                }, 2000); 
+                                break;
+                        }
+                    }
+                )
+            } else {
+                $.post(
+                    '<?= base_url('index.php/test/saveAnswer')?>',
+                    {
+                        answer_data : json,
+                        act_id : '<?= $user_act_data['act_id'] ?>',
+                        fin : 1
+                    },
+                    function (data){
+                        var data = JSON.parse(data); 
+                        switch (data['code']){
+                            case 1:
+                                alert(data['message']);
+                                location.reload();
+                                break;
+                            case -1:
+                            case -3:
+                                alert(data['error']);
+                                location.href = '<?= base_url() ?>';
+                                break;
+                            case -4:
+                            case -5:
+                                alert(data['error']);
+                                location.reload();
+                                break;
+                            default:
+                                alert(data['error']);
+                                break;
+                        }
+                    }
+                )
+            }
+        }
+        <?php endif;?>
     </script>
 </html>
