@@ -11,7 +11,10 @@
 $dir_name = dirname(__FILE__);
 
 //Construct the command
-$command = 'cd ' . $dir_name . '; git pull';
+//$command = 'cd ' . $dir_name . '; git pull';
+
+//Test Log & Git Hook
+$command = 'cd ' . $dir_name . '; ';
 
 //Exec git pull
 exec($command, $out, $status);
