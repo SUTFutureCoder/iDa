@@ -10,8 +10,11 @@
 //Get the dir name to prepare git pull
 $dir_name = dirname(__FILE__);
 
+//Construct the command
+$command = 'cd ' . $dir_name . '; git pull';
+
 //Exec git pull
-exec('cd ' . $dir_name . '; git pull', $out, $status);
+exec($command, $out, $status);
 
 
 //Write the log file
@@ -21,6 +24,8 @@ if (!$fp){
 } else {
     if (is_array($out)){
         $fileData = '---' . date('Y-m-d H:i:s') . '---' . "\n";
+	$fileData .= 'Shell Exec Command' . "\n";
+	$fileData .= $command . "\n";
         $fileData .= 'Shell Exec Return' . "\n";
         foreach ($out as $out_value){
             $fileData .= $out_value . "\n";
