@@ -46,9 +46,9 @@
                 <li class="dropdown active">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= htmlentities($this->session->userdata('user_name')) ?> <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Action</a></li>
+                    <!-- <li><a href="#">Action</a></li>
                     <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
+                    <li><a href="#">Something else here</a></li>-->
                     <li class="divider"></li>
                     <!-- <li class="dropdown-header">Nav header</li> -->
                     <li><a id="logout" href="#">注销</a></li>
@@ -65,10 +65,15 @@
         <br/>
         <br/>
         <div class="well well-lg">
-            <h4>本系统每十分钟自动保存一次，且在点击完成按钮之前继续答题</h4>
-            <h4>开发者+运维 QQ：506200331</h4>
+            <h3>欢迎使用工大爱答答题平台</h3>
+            <hr/>
+            <h4>每十分钟自动保存一次，且在点击完成按钮之前允许重复进入继续答题。</h4>
+            <h4>因为是Alpha版本，各种错误在所难免，敬请包涵。</h4>
+            <h4>吐槽、BUG提交 - 开发者+运维 QQ：506200331@qq.com</h4>
             <hr/>
             <h5>"If you always put limits on everything you do, physical or anything else, it will spread into your work and into your life. There are no limits. There are only plateaus, and you must not stay there, you must go beyond them." - Bruce Lee</h5>
+            <h5>© 沈阳工业大学 网络管理中心 2015</h5>
+            <h6>献给网管的第3720行代码</h6>
         </div>
         <div class="modal fade bs-example-modal-sm" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog  modal-sm">

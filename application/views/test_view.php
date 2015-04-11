@@ -163,8 +163,7 @@
                 }
                 
                 if (MS == 0){
-                    //时间到！
-                    alert('ewrw');
+                    save(1);
                 }
             }
         <?php endif; ?>

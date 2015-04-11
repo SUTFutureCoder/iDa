@@ -114,33 +114,33 @@
     <script src="<?= base_url('js/jquery.form.js')?>"></script>
     <script>
         $(function(){
-//            var options = {
-//                dataType    : "json",
-//                beforeSubmit: function (){
-//                    $(".btn").attr("value", "正在提交中……请稍后");
-//                    $(".btn").attr("disabled", "disabled");
-//                },
-//                success     : function (data){
-//                    if (1 != data['code']){
-//                        alert(data['error']);
-//                    } else {
-//                        alert('添加成功');
-//                        $("#form_add_question").resetForm();
-//                    }
-//                    $(".btn").removeAttr("disabled");
-//                    $(".btn").attr("value", "添加");
-//                },
-//                error       : function (msg){
-//                    console.log(msg);
-//                    alert("操作失败");
-//                    $(".btn").removeAttr("disabled");
-//                    $(".btn").attr("value", "添加");
-//                }
-//
-//            };
-//
-//            $("#form_add_question").ajaxForm(options);
-//            
+            var options = {
+                dataType    : "json",
+                beforeSubmit: function (){
+                    $(".btn").attr("value", "正在提交中……请稍后");
+                    $(".btn").attr("disabled", "disabled");
+                },
+                success     : function (data){
+                    if (1 != data['code']){
+                        alert(data['error']);
+                    } else {
+                        alert('添加成功');
+                        $("#form_add_question").resetForm();
+                    }
+                    $(".btn").removeAttr("disabled");
+                    $(".btn").attr("value", "添加");
+                },
+                error       : function (msg){
+                    console.log(msg);
+                    alert("操作失败");
+                    $(".btn").removeAttr("disabled");
+                    $(".btn").attr("value", "添加");
+                }
+
+            };
+
+            $("#form_add_question").ajaxForm(options);
+            
             //确定选项数目
             $("#confirm_question_num").click(function(){
                 $("#question_choose_set").empty();

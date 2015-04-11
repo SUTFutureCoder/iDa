@@ -102,7 +102,7 @@ class Test extends CI_Controller{
         if ($choose_sum = $act_data['act_question_choose_sum']){
             $question_id_list['choose'] = $this->getQuestionIdListByType($act_data['act_question_type'], 'choose');
             if (count($question_id_list['choose']) > $choose_sum){
-                $question_id_list['choose'] = array_slice($question_id_list['choose'], $choose_sum - 1);
+                $question_id_list['choose'] = array_slice($question_id_list['choose'], 0, $choose_sum);
             }
             
             //遍历以便getMulti
@@ -118,8 +118,8 @@ class Test extends CI_Controller{
         //multi_choose
         if ($multi_choose_sum = $act_data['act_question_multi_choose_sum']){
             $question_id_list['multi_choose'] = $this->getQuestionIdListByType($act_data['act_question_type'], 'multi_choose');            
-            if (count($question_id_list['multi_choose']) > $choose_sum){
-                $question_id_list['multi_choose'] = array_slice($question_id_list['multi_choose'], $multi_choose_sum - 1);
+            if (count($question_id_list['multi_choose']) > $multi_choose_sum){
+                $question_id_list['multi_choose'] = array_slice($question_id_list['multi_choose'], 0, $multi_choose_sum);
             }
             
             if (is_array($question_id_list['multi_choose'])){
@@ -134,8 +134,8 @@ class Test extends CI_Controller{
         //fill
         if ($fill_sum = $act_data['act_question_fill_sum']){
             $question_id_list['fill'] = $this->getQuestionIdListByType($act_data['act_question_type'], 'fill');
-            if (count($question_id_list['fill']) > $choose_sum){
-                $question_id_list['fill'] = array_slice($question_id_list['fill'], $fill_sum - 1);
+            if (count($question_id_list['fill']) > $fill_sum){
+                $question_id_list['fill'] = array_slice($question_id_list['fill'], 0, $fill_sum);
             }
             
             if (is_array($question_id_list['fill'])){
@@ -150,8 +150,8 @@ class Test extends CI_Controller{
         //judge
         if ($judge_sum = $act_data['act_question_judge_sum']){
             $question_id_list['judge'] = $this->getQuestionIdListByType($act_data['act_question_type'], 'judge');
-            if (count($question_id_list['judge']) > $choose_sum){
-                $question_id_list['judge'] = array_slice($question_id_list['judge'], $judge_sum - 1);
+            if (count($question_id_list['judge']) > $judge_sum){
+                $question_id_list['judge'] = array_slice($question_id_list['judge'], 0, $judge_sum);
             }
             
             if (is_array($question_id_list['judge'])){

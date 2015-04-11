@@ -30,7 +30,7 @@ class Database{
         if (self::$_db){
             return self::$_db;
         } else {
-            self::$_db = new MongoClient();            
+            self::$_db = new Mongo();            
             return self::$_db;
         }
     }

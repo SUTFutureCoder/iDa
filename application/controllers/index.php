@@ -40,7 +40,7 @@ class Index extends CI_Controller{
             $data = $this->act_model->getActList();
             //保存一天
 //            $mc->set('ida_' . $this->cache->getNS('act') . '_ing_list', $data, 86400);
-            $mc->set('ida_' . $this->cache->getNS('act') . '_ing_list', $data, 5);
+            $mc->set('ida_' . $this->cache->getNS('act') . '_ing_list', $data, 86400);
         }
         
         $this->load->view('index_view', array(

@@ -79,7 +79,7 @@ class Admin_add_question extends CI_Controller{
         
         
         //选择或填空或判断
-        if ($this->input->post('question_num', TRUE)){
+        if ($this->input->post('question_choose', TRUE)){
             if (!$this->input->post('question_choose')){
                 echo json_encode(array('code' => -4, 'error' => '选项不能为空'));
                 return 0;

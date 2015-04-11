@@ -46,9 +46,9 @@
                 <li class="dropdown active">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= htmlentities($this->session->userdata('user_name')) ?> <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Action</a></li>
+                    <!-- <li><a href="#">Action</a></li>
                     <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
+                    <li><a href="#">Something else here</a></li>-->
                     <li class="divider"></li>
                     <!-- <li class="dropdown-header">Nav header</li> -->
                     <li><a id="logout" href="#">注销</a></li>
