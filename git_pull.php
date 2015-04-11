@@ -10,7 +10,24 @@
 //Get the dir name to prepare git pull
 $dir_name = dirname(__FILE__);
 
-//Exec git pullhttps://github.com/SUTFutureCoder/iDa.git
-//exec('cd ' . $dir_name . '; git pull https://SUTFutureCoder:lin616717@github.com/SUTFutureCoder/iDa.git master');
+//Exec git pull
+exec('cd ' . $dir_name . '; git pull', $out, $status);
 
-exec('cd ' . $dir_name . '; git pull git@github.com:SUTFutureCoder/iDa.git master');
+
+//Write the log file
+$fp = fopen('pull_log.txt', 'a');
+if (!$fp){
+    exit();
+} else {
+    if (is_array($out)){
+        $fileData = '---' . date('Y-m-d H:i:s') . '---' . "\n";
+        $fileData .= 'Shell Exec Return' . "\n";
+        foreach ($out as $out_value){
+            $fileData .= $out_value . "\n";
+        }
+    }
+    $fileData .= 'Status' . "\n";
+    $fileData .= $status . "\n";
+    fwrite($fp, $fileData);
+    fclose($fp);
+}
