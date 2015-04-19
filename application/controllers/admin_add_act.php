@@ -132,6 +132,7 @@ class Admin_add_act extends CI_Controller{
             $clean['act_question_choose_sum'] = $this->input->post('act_question_choose_sum', TRUE);
         }
         
+
         if (!ctype_digit($this->input->post('act_question_multi_choose_sum', TRUE))){
             echo json_encode(array('code' => -10, 'error' => '抱歉，多选数量不能为空且为数字'));
             return 0;

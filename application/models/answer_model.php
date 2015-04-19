@@ -128,19 +128,21 @@ class Answer_model extends CI_Model{
      *  @Purpose:    
      *  更新分数    
      *  @Method Name:
-     *  setScore($user_id, $act_id, $score, $fin)   
+     *  setScore($user_id, $act_id, $score, $start_time, $fin)   
      *  @Parameter: 
      *  $score 分数
+     *  $start_time 开始时间
      *  $fin   终结答卷
      *  @Return: 
      *  0 失败
      *  1 成功
     */
-    public function setScore($user_id, $act_id, $score, $fin){
+    public function setScore($user_id, $act_id, $score, $start_time, $fin){
         $this->load->library('database');
         $db = $this->database->conn();
         if ($fin){
-            $result = $db->ida->answer->update(array('user_id' => $user_id, 'act_id' => $act_id), array('$set' => array('answer_score' => $score, 'end_time' => date('Y-m-d H:i:s'))));
+            $end_time = date('Y-m-d H:i:s');
+            $result = $db->ida->answer->update(array('user_id' => $user_id, 'act_id' => $act_id), array('$set' => array('answer_score' => $score, 'end_time' => $end_time, 'answer_time' => (strtotime($end_time) - strtotime($start_time)))));
         }else {
             $result = $db->ida->answer->update(array('user_id' => $user_id, 'act_id' => $act_id), array('$set' => array('answer_score' => $score)));
         }

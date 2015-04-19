@@ -115,6 +115,7 @@ class Index extends CI_Controller{
         $this->session->set_userdata('user_role', $result['user_role']);
         $this->session->set_userdata('user_id', $result['_id']);
         $this->session->set_userdata('user_telephone', $result['user_telephone']);
+        $this->session->set_userdata('user_school', $result['user_school']);
         
         echo json_encode(array('code' => 1, 'user_name' => $result['user_name']));
     }

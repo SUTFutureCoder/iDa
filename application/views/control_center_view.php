@@ -34,6 +34,10 @@
                                 <a href="javascript:void(0);" src="<?= base_url('index.php/admin_add_act') ?>" class="cs-navi-tab">添加活动</a></p>
                                 <a href="javascript:void(0);" src="index.php/changepass" class="cs-navi-tab">活动列表</a></p>
                         </div>      
+                    
+                        <div title="平台相关">
+                                <a href="javascript:void(0);" src="<?= base_url('index.php/admin_statis') ?>" class="cs-navi-tab">统计</a></p>
+                        </div>      
 
                         <div title="权限相关">
                                 <a href="javascript:void(0);" src="<?= base_url('index.php/admin_add_user')?>" class="cs-navi-tab">添加用户</a></p>

@@ -80,8 +80,15 @@ class Test extends CI_Controller{
                 return 0;
                 
             } else {
-                //已经完成
-                $this->load->view('test_view', array('answer_fin' => 1, 'history' => $history));
+                if (0 == $history['answer_score'] && isset($history['user_answer_list'])){
+                    //用户可能未完成即关闭页面，重新计算分数
+                    $history['answer_score'] = $this->calcScore($this->session->userdata('user_id'), $this->input->post('act_id', TRUE));
+                } 
+                
+                //显示排行榜
+                $rank = $this->getRank($this->session->userdata('user_id'), $this->input->post('act_id', TRUE));
+                
+                $this->load->view('test_view', array('answer_fin' => 1, 'history' => $history, 'ranking' => $rank));
                 return 0;
             }
         }
@@ -171,6 +178,7 @@ class Test extends CI_Controller{
         $db_data = array();
         $db_data['user_id'] = $this->session->userdata('user_id');
         $db_data['user_name'] = $this->session->userdata('user_name');
+        $db_data['user_school'] = $this->session->userdata('user_school');
         $db_data['act_id'] = $this->input->post('act_id', TRUE);
         $db_data['start_time'] = date('Y-m-d H:i:s');
         $db_data['answer_score'] = 0;
@@ -180,6 +188,7 @@ class Test extends CI_Controller{
         } else {
             $db_data['end_time'] = date('Y-m-d H:i:s', strtotime($db_data['start_time']  . ' +' . $act_data['act_paper_time'] . ' min'));
         }
+        $db_data['answer_time'] = strtotime($db_data['end_time']) - strtotime($db_data['start_time']);
         
         foreach ($question_data_list as $value){
             $db_data['question_id_list'][] = $value['question_id'];
@@ -383,7 +392,27 @@ class Test extends CI_Controller{
             }
         }
         
-        $this->answer_model->setScore($user_id, $act_id, $score, 1);
+        $this->answer_model->setScore($user_id, $act_id, $score, $data['start_time'], 1);
         return $score;
+    }
+    
+    /**    
+     *  @Purpose:    
+     *  获取排行榜    
+     *  @Method Name:
+     *  getRank($user_id, $act_id)
+     *  @Parameter: 
+     *  
+     *  @Return: 
+     *  score 分数
+    */
+    private function getRank($user_id, $act_id){
+        //防止出现意外，以数据库数据为准
+        $this->load->library('session');
+        $this->load->model('act_model');
+        
+        $rank = $this->act_model->getUserRank($user_id, $act_id);
+        
+        return $rank;
     }
 }

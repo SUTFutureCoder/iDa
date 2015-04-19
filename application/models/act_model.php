@@ -102,4 +102,38 @@ class Act_model extends CI_Model{
     
         return $act_info;
     }
+    
+    /**    
+     *  @Purpose:    
+     *  通过用户id和活动id获取排行榜和用户排名
+     *  [user_id, answer_score, end_time, start_time, user_name]
+     *  @Method Name:
+     *  getActInfoById($id)    
+     *  @Parameter: 
+     *  string objectId($id) 活动标识ID
+     *  @Return: 
+     *  0 无列表
+     *  array $act_list 活动列表
+    */ 
+    public function getUserRank($user_id, $act_id){
+        $this->load->library('database');
+        $db = $this->database->conn();
+        
+        try{
+            $cursor = $db->ida->answer->find(array('act_id' => $act_id), array('answer_score' => 1, 'user_name' => 1, 'user_school' => 1))->sort(array('answer_score' => 1));
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+            return 0;
+        }
+        
+        
+        foreach ($cursor as $key => $value){
+            
+        }
+        
+        if (!isset($key)){
+            return 0;
+        }
+    
+    }
 }

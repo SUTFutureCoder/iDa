@@ -31,7 +31,6 @@ class Admin_add_user extends CI_Controller{
     
     public function Index(){
         $this->load->library('session');
-        $this->load->library('secure');
         $this->load->library('role');
         $this->load->library('authorizee');
 

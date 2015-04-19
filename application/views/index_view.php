@@ -51,7 +51,7 @@
                     <li><a href="#">Something else here</a></li>-->
                     <li class="divider"></li>
                     <!-- <li class="dropdown-header">Nav header</li> -->
-                    <li><a id="logout" href="#">注销</a></li>
+                    <li><a id="logout" onclick="logOut()" href="#">注销</a></li>
                     </ul>
                 </li>
             <?php endif;?>
@@ -268,15 +268,12 @@
                         alert(data['error']);
                     } else {
                         $("#loginModal").modal('toggle');
-                        $(".navbar-right").empty();                        
+                        $(".navbar-right").empty();  
                         $(".navbar-right").append('<li class="dropdown active">' + 
                     '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">' + data['user_name'] + '<span class="caret"></span></a>' + 
                     '<ul class="dropdown-menu" role="menu">' + 
-                    '<li><a href="#">Action</a></li>' + 
-                    '<li><a href="#">Another action</a></li>' + 
-                    '<li><a href="#">Something else here</a></li>' + 
                     '<li class="divider"></li>' +                     
-                    '<li><a id="logout" href="#">注销</a></li>' + 
+                    '<li><a id="logout" onclick="logOut()" href="#">注销</a></li>' + 
                     '</ul>'+
                 '</li>');
                         $("#login_button").removeAttr("onclick");
@@ -310,11 +307,8 @@
                         $(".navbar-right").append('<li class="dropdown active">' + 
                     '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">' + $('#registerName').val() + '<span class="caret"></span></a>' + 
                     '<ul class="dropdown-menu" role="menu">' + 
-                    '<li><a href="#">Action</a></li>' + 
-                    '<li><a href="#">Another action</a></li>' + 
-                    '<li><a href="#">Something else here</a></li>' + 
                     '<li class="divider"></li>' +                     
-                    '<li><a id="logout" href="#">注销</a></li>' + 
+                    '<li><a id="logout" onclick="logOut()" href="#">注销</a></li>' + 
                     '</ul>'+
                 '</li>');
                         
@@ -338,27 +332,26 @@
 
             $("#form_register").ajaxForm(register_options);
             
-            //注销
-            $("#logout").click(function(){
-               $.post(
-                    '<?= base_url('index.php/index/logout')?>',
-                    {
-                        logout : '1'
-                    },
-                    function (data){
-                        if ('success' == data){
-                            logined = 0;
-                            $(".dropdown").remove();
-                            $(".navbar-right").append('<li class="active"><a id="login_button" herf="#" onclick="showLogin()">登录/注册</a></li>');
-                        }
-                    }
-               ) 
-            });
-            
         });
     </script>
     
     <script>
+        function logOut(){
+            $.post(
+                 '<?= base_url('index.php/index/logout')?>',
+                 {
+                     logout : '1'
+                 },
+                 function (data){
+                     if ('success' == data){
+                         logined = 0;
+                         $(".dropdown").remove();
+                         $(".navbar-right").append('<li class="active"><a id="login_button" herf="#" onclick="showLogin()">登录/注册</a></li>');
+                     }
+                 }
+            ) 
+        }
+        
         function joinTest(act_id){           
             
             if (logined == 0){
