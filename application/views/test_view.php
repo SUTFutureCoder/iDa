@@ -52,7 +52,7 @@
             </tr>
             <tr>
                 <th>平均用时</th>
-                <td><?= number_format($act_statis['score']['result'][0]['average_score'], 2) ?></td>
+                <td><?= number_format($act_statis['score']['result'][0]['average_time'] / 60, 2) ?></td>
             </tr>
         </table>
     </div>
