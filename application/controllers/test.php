@@ -85,10 +85,22 @@ class Test extends CI_Controller{
                     $history['answer_score'] = $this->calcScore($this->session->userdata('user_id'), $this->input->post('act_id', TRUE));
                 } 
                 
+                //获取活动信息
+                $act_info = array();
+                if (!$act_info = $mc->get('ida_' . $this->cache->getNS('act') . '_act_' . $this->input->post('act_id', TRUE))){
+                    $act_info = $this->act_model->getActInfoById($this->input->post('act_id', TRUE));
+                    $mc->set('ida_' . $this->cache->getNS('act') . '_act_' . $this->input->post('act_id', TRUE), $act_info);
+                }
+                    
                 //显示排行榜
+                $rank = array();
                 $rank = $this->getRank($this->session->userdata('user_id'), $this->input->post('act_id', TRUE));
                 
-                $this->load->view('test_view', array('answer_fin' => 1, 'history' => $history, 'ranking' => $rank));
+                //获取统计信息
+                $act_statis = array();
+                $act_statis = $this->act_model->getActStatisById($this->input->post('act_id', TRUE));
+                
+                $this->load->view('test_view', array('answer_fin' => 1, 'history' => $history, 'act_info' => $act_info, 'ranking' => $rank, 'act_statis' => $act_statis));
                 return 0;
             }
         }
@@ -339,7 +351,7 @@ class Test extends CI_Controller{
         if (date('Y-m-d H:i:s') <= $data['end_time']){
             //允许保存
             $result = $this->answer_model->setSaveAnswer($this->session->userdata('user_id', TRUE), $this->input->post('act_id', TRUE), $answer_data);
-            if ($result["ok"]){
+            if ($result){
                 echo json_encode(array('code' => 1));
                 return 0;
             }

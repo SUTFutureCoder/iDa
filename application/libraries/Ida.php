@@ -49,11 +49,7 @@ class Ida{
      *  @Parameter: 
      *  @Return: 
      *  0 无列表
-     *  array $act_sum = (
-     *      'sum' => $sum,
-     *      'progress_sum' => $progress_sum,
-     *      'overdue_sum' => $overdue_sum
-     *  ) 活动数量列表
+     *  array $act_info 各个活动相关信息
     */ 
     public function getActInfo(){
         if (!self::$_ci){
@@ -96,7 +92,8 @@ class Ida{
                 '_id' => '$act_id',
                 'max_score' => array('$max' => '$answer_score'),
                 'min_score' => array('$min' => '$answer_score'),
-                'average_score' => array('$avg' => '$answer_score')
+                'average_score' => array('$avg' => '$answer_score'),
+                'average_time' => array('$avg' => '$answer_time')
             ));
             
             $act_info['list'][(string)$value['_id']]['score'] = self::$_db->ida->answer->aggregate(array($match, $group));

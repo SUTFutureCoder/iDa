@@ -58,7 +58,11 @@
             </tr>
             <tr>
                 <th>平均分数</th>
-                <td><?= $value['score']['result'][0]['average_score'] ?></td>
+                <td><?= number_format($value['score']['result'][0]['average_score'], 2) ?></td>
+            </tr>
+            <tr>
+                <th>平均耗时</th>
+                <td><?= number_format($value['score']['result'][0]['average_time'] / 60, 2) ?></td>
             </tr>
             <?php endforeach;?>
         </tbody>

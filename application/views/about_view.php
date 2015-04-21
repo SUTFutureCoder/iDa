@@ -73,7 +73,7 @@
             <hr/>
             <h5>"If you always put limits on everything you do, physical or anything else, it will spread into your work and into your life. There are no limits. There are only plateaus, and you must not stay there, you must go beyond them." - Bruce Lee</h5>
             <h5>© 沈阳工业大学 网络管理中心 2015</h5>
-            <h6>献给网管的第3720行代码</h6>
+            <h6>献给网管的第4299行代码</h6>
         </div>
         <div class="modal fade bs-example-modal-sm" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog  modal-sm">

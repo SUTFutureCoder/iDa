@@ -17,6 +17,7 @@ class Question_model extends CI_Model{
         parent::__construct();
     }
     
+    static private $_db;
     /**    
      *  @Purpose:    
      *  获取问题类型
@@ -29,11 +30,12 @@ class Question_model extends CI_Model{
     */ 
     public function getQuestionType(){
         $this->load->library('database');
-        
-        $db = $this->database->conn();
+        if (!isset(self::$_db)){
+            self::$_db = $this->database->conn();
+        }
         
         $type = array();
-        $type_cursor = $db->ida->command(array('distinct' => 'question', 'key' => 'question_type'));
+        $type_cursor = self::$_db->ida->command(array('distinct' => 'question', 'key' => 'question_type'));
         
         foreach ($type_cursor as $key => $value){              
             $type = $value;
@@ -55,11 +57,12 @@ class Question_model extends CI_Model{
     */ 
     public function addQuestion($question){
         $this->load->library('database');        
-        
-        $db = $this->database->conn();
+        if (!isset(self::$_db)){
+            self::$_db = $this->database->conn();
+        }
         
         //设置或获取自增
-        $cursor = $db->ida->question->find(array(), array('question_id' => 1))->sort(array('question_id' => -1))->limit(1);
+        $cursor = self::$_db->ida->question->find(array(), array('question_id' => 1))->sort(array('question_id' => -1))->limit(1);
         foreach ($cursor as $key => $value){
         }
         
@@ -69,7 +72,7 @@ class Question_model extends CI_Model{
             $question['question_id'] = ++$value['question_id'];
         }
         
-        $db->ida->question->insert($question, array('safe' => TRUE));
+        self::$_db->ida->question->insert($question, array('safe' => TRUE));
         if ($question['_id']){
             return $question['question_id'];
         } else {
@@ -91,11 +94,13 @@ class Question_model extends CI_Model{
     */ 
     public function dumpQuestion($question_type, $type){
         $this->load->library('database');
+        if (!isset(self::$_db)){
+            self::$_db = $this->database->conn();
+        }
         
-        $db = $this->database->conn();
         $data = array();
         
-        $cursor = $db->ida->question->find(array('type' => $type, 'question_type' => $question_type), array('question_id' => 1));
+        $cursor = self::$_db->ida->question->find(array('type' => $type, 'question_type' => $question_type), array('question_id' => 1));
         
         foreach ($cursor as $key => $value){
             $data[] = $value['question_id'];
@@ -120,9 +125,11 @@ class Question_model extends CI_Model{
     */ 
     public function getQuestionById($question_id){
         $this->load->library('database');
+        if (!isset(self::$_db)){
+            self::$_db = $this->database->conn();
+        }
         
-        $db = $this->database->conn();
-        $cursor = $db->ida->question->find(array('question_id' => (int)$question_id));
+        $cursor = self::$_db->ida->question->find(array('question_id' => (int)$question_id));
         
         foreach ($cursor as $key => $value){
             $data = $value;

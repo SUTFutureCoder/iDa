@@ -23,8 +23,69 @@
                 <td>结束时间</td><td><?= $history['end_time'] ?></td>
             </tr>
             <tr>
+                <td>当前排名</td><td id="rank">100+</td>
+            </tr>
+            <tr>
                 <td colspan="2"><button type="button" onclick="window.location.href='<?= base_url() ?>'" class="btn btn-primary btn-md btn-block">返回</button></td>
             </tr>
+        </table>
+    </div>
+    <hr>
+    <div class="panel panel-info">
+        <div class="panel-heading"><?= $act_info['act_name'] ?>统计</div>
+        <table class="table table-striped">
+            <tr>
+                <th>参与人数</th>
+                <td><?= $act_statis['join'] ?></td>
+            </tr>
+            <tr>
+                <th>最高分</th>
+                <td><?= $act_statis['score']['result'][0]['max_score'] ?></td>
+            </tr>
+            <tr>
+                <th>最低分</th>
+                <td><?= $act_statis['score']['result'][0]['min_score'] ?></td>
+            </tr>
+            <tr>
+                <th>平均分</th>
+                <td><?= number_format($act_statis['score']['result'][0]['average_score'], 2) ?></td>
+            </tr>
+            <tr>
+                <th>平均用时</th>
+                <td><?= number_format($act_statis['score']['result'][0]['average_score'], 2) ?></td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+    <div class="panel panel-success">
+        <div class="panel-heading"><?= $act_info['act_name'] ?>排行榜</div>
+        <table class="table">
+            <thead>
+                <th class="col-sm-1">排名</th>
+                <th class="col-sm-1">姓名</th>
+                <th class="col-sm-1">学校</th>
+                <th class="col-sm-1">分数</th>
+                <th class="col-sm-1">完成时间</th>
+            </thead>
+            <tbody>
+            <?php $rank = 1 ?>
+            <?php foreach ($ranking as $value): ?>
+            <?php if ($history['user_id'] == $value['user_id']): ?>
+            <script>
+                document.getElementById('rank').innerHTML = '<?= $rank ?>';
+            </script>
+            <tr class="success">
+            <?php else: ?>
+            <tr>
+            <?php endif; ?>
+                <th><?= $rank++ ?></th>
+                <td><?= $value['user_name'] ?></td>
+                <td><?= $value['user_school'] ?></td>
+                <td><?= $value['answer_score'] ?></td>
+                <td><?= number_format($value['answer_time'] / 60, 2) ?></td>
+            </tr>
+            <?php endforeach; ?>
+            </tbody>
         </table>
     </div>
     <?php else: ?>
@@ -312,5 +373,6 @@
             }
         }
         <?php endif;?>
+    
     </script>
 </html>

@@ -18,6 +18,7 @@ class Answer_model extends CI_Model{
         parent::__construct();
     }
     
+    static private $_db;
     /**    
      *  @Purpose:    
      *  检查用户是否已经回答    
@@ -33,10 +34,11 @@ class Answer_model extends CI_Model{
     */
     public function checkUserAnswer($user_id, $act_id){
         $this->load->library('database');
+        if (!isset(self::$_db)){
+            self::$_db = $this->database->conn();
+        }
         
-        $db = $this->database->conn();
-        
-        $cursor = $db->ida->answer->find(array('user_id' => $user_id, 'act_id' => $act_id), array('start_time' => 1, 'end_time' => 1, 'answer_score' => 1));
+        $cursor = self::$_db->ida->answer->find(array('user_id' => $user_id, 'act_id' => $act_id), array('user_id' => 1, 'start_time' => 1, 'end_time' => 1, 'answer_score' => 1));
         
         foreach ($cursor as $key => $value){
             $answer_history = $value;
@@ -64,10 +66,11 @@ class Answer_model extends CI_Model{
     */
     public function getUserHistoryAnswer($user_id, $act_id){
         $this->load->library('database');
+        if (!isset(self::$_db)){
+            self::$_db = $this->database->conn();
+        }
         
-        $db = $this->database->conn();
-        
-        $cursor = $db->ida->answer->find(array('user_id' => $user_id, 'act_id' => $act_id));
+        $cursor = self::$_db->ida->answer->find(array('user_id' => $user_id, 'act_id' => $act_id));
         
         foreach ($cursor as $key => $value){
             $data = $value;
@@ -93,10 +96,11 @@ class Answer_model extends CI_Model{
     */
     public function setInitAnswer($answer_init_data){
         $this->load->library('database');
+        if (!isset(self::$_db)){
+            self::$_db = $this->database->conn();
+        }
         
-        $db = $this->database->conn();
-        
-        $db->ida->answer->insert($answer_init_data, array('safe' => TRUE));
+        self::$_db->ida->answer->insert($answer_init_data, array('safe' => TRUE));
         
         if (isset($answer_init_data['_id'])){
             return $answer_init_data['_id'];
@@ -119,8 +123,11 @@ class Answer_model extends CI_Model{
     */
     public function setSaveAnswer($user_id, $act_id, $answer_data){
         $this->load->library('database');
-        $db = $this->database->conn();
-        $result = $db->ida->answer->update(array('user_id' => $user_id, 'act_id' => $act_id), array('$set' => array('user_answer_list' => $answer_data)));
+        if (!isset(self::$_db)){
+            self::$_db = $this->database->conn();
+        }
+        
+        $result = self::$_db->ida->answer->update(array('user_id' => $user_id, 'act_id' => $act_id), array('$set' => array('user_answer_list' => $answer_data)));
         return $result;
     } 
     
@@ -139,12 +146,15 @@ class Answer_model extends CI_Model{
     */
     public function setScore($user_id, $act_id, $score, $start_time, $fin){
         $this->load->library('database');
-        $db = $this->database->conn();
+        if (!isset(self::$_db)){
+            self::$_db = $this->database->conn();
+        }
+        
         if ($fin){
             $end_time = date('Y-m-d H:i:s');
-            $result = $db->ida->answer->update(array('user_id' => $user_id, 'act_id' => $act_id), array('$set' => array('answer_score' => $score, 'end_time' => $end_time, 'answer_time' => (strtotime($end_time) - strtotime($start_time)))));
+            $result = self::$_db->ida->answer->update(array('user_id' => $user_id, 'act_id' => $act_id), array('$set' => array('answer_score' => $score, 'end_time' => $end_time, 'answer_time' => (strtotime($end_time) - strtotime($start_time)))));
         }else {
-            $result = $db->ida->answer->update(array('user_id' => $user_id, 'act_id' => $act_id), array('$set' => array('answer_score' => $score)));
+            $result = self::$_db->ida->answer->update(array('user_id' => $user_id, 'act_id' => $act_id), array('$set' => array('answer_score' => $score)));
         }
         
         return $result;

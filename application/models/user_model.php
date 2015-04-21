@@ -18,6 +18,7 @@ class User_model extends CI_Model{
         parent::__construct();
     }
     
+    static private $_db;
     /**    
      *  @Purpose:    
      *  添加用户    
@@ -31,9 +32,12 @@ class User_model extends CI_Model{
     */
     public function addUser($user_info){
         $this->load->library('database');
-        $db = $this->database->conn();
+        if (!isset(self::$_db)){
+            self::$_db = $this->database->conn();
+        }
+        
         try{
-            $db->ida->user->insert($user_info, array('safe' => TRUE));            
+            self::$_db->ida->user->insert($user_info, array('safe' => TRUE));            
             $result[0] = 1;
             $result[1] = $user_info['_id'];
         } catch (Exception $ex) {
@@ -58,9 +62,11 @@ class User_model extends CI_Model{
     public function checkPassword($user_telephone, $user_password){
         $this->load->library('database');
         $this->load->library('encrypt');
-        $db = $this->database->conn();
+        if (!isset(self::$_db)){
+            self::$_db = $this->database->conn();
+        }
         
-        $cursor = $db->ida->user->find(array('user_telephone' => $user_telephone));
+        $cursor = self::$_db->ida->user->find(array('user_telephone' => $user_telephone));
         
         foreach ($cursor as $key => $value){
             //只匹配一个
@@ -93,8 +99,11 @@ class User_model extends CI_Model{
     */
     public function checkUserExist($user_telephone){
         $this->load->library('database');
-        $db = $this->database->conn();
-        $cursor = $db->ida->user->find(array('user_telephone' => $user_telephone));
+        if (!isset(self::$_db)){
+            self::$_db = $this->database->conn();
+        }
+        
+        $cursor = self::$_db->ida->user->find(array('user_telephone' => $user_telephone));
         foreach ($cursor as $key => $value){
             
         }
