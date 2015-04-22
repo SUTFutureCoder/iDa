@@ -29,7 +29,30 @@ class Admin_add_question extends CI_Controller{
      *  
     */
     public function Index(){
-        $this->load->view('admin_add_question_view');
+        $this->load->library('session');
+        $this->load->library('cache');
+        $this->load->library('role');
+        $this->load->library('authorizee');
+        $this->load->model('question_model');
+        
+        if (!$this->authorizee->CheckAuthorizee($this->session->userdata('user_role'), 'question_add')){
+            header("Content-type: text/html; charset=utf-8");
+            echo '<script>alert("抱歉，您的权限不足");window.location.href="' . base_url() . '";</script>';
+            return 0;
+        }        
+        
+        $mc = $this->cache->memcache();
+        
+        //获取问题类型列表
+        $question_type_list = array();
+        if (!$question_type_list = $mc->get('ida_' . $this->cache->getNS('question') . '_question_type_list')){
+            $question_type_list = $this->question_model->getQuestionType();
+            $mc->set('ida_' . $this->cache->getNS('question') . '_question_type_list', $question_type_list);
+        }
+        
+        $this->load->view('admin_add_question_view', array(
+            'question_type_list' => $question_type_list
+        ));
     }
     
     
@@ -49,18 +72,29 @@ class Admin_add_question extends CI_Controller{
         $this->load->library('session');
         $this->load->library('cache');
         
-        
         if (!$this->authorizee->CheckAuthorizee($this->session->userdata('user_role'), 'question_add')){
             echo json_encode(array('code' => -1, 'error' => '抱歉，您的权限不足'));
             return 0;
         }
         
         $clean = array();
-        if (!$this->input->post('question_type', TRUE) || 20 < $this->input->post('question_type', TRUE)){
+        if ((null === ($this->input->post('question_type_select', TRUE)) && (!$this->input->post('question_type_fill', TRUE)))
+                    || ((null !== ($this->input->post('question_type_select', TRUE)) && !$this->input->post('question_type_select', TRUE) && !$this->input->post('question_type_fill', TRUE)))
+                || (20 < mb_strlen($this->input->post('question_type_select', TRUE)) || (null !== ($this->input->post('question_type_fill', TRUE)) && 20 < mb_strlen($this->input->post('question_type_fill', TRUE))))){
             echo json_encode(array('code' => -2, 'error' => '抱歉，问题类型不能为空或大于20个字符'));
             return 0;
         } else {
-            $clean['question_type'] = $this->input->post('question_type', TRUE);
+            $clean['question_type'] = $this->input->post('question_type_fill', TRUE) ? $this->input->post('question_type_fill', TRUE) : $this->input->post('question_type_select', TRUE);
+            if ($this->input->post('question_type_fill', TRUE)){
+                //检查类型是否存在
+                if (!$this->question_model->checkQuestionType($clean['question_type'])){
+                    $question_type_list = array();
+                    $mc = $this->cache->memcache();
+                    $question_type_list = $mc->get('ida_' . $this->cache->getNS('question') . '_question_type_list');
+                    $question_type_list[] = $clean['question_type'];
+                    $mc->set('ida_' . $this->cache->getNS('question') . '_question_type_list', $question_type_list);
+                }
+            }
         }
         
         if (!$this->input->post('question_content', TRUE) || 300 < mb_strlen($this->input->post('question_content', TRUE))){

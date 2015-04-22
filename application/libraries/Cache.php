@@ -37,47 +37,47 @@ class Cache{
      *  @Return: 
      *  string $seed 命名空间唯一标识符
     */
-    static public function setNS($type){
-        if (!self::$_mc){
-            self::$_mc = new Memcached(); 
-            self::$_mc->addServer('127.0.0.1', 11211);
-        }
-        
-        switch ($type){
-            case 'act':
-                $tem_seed = 'ac3';
-                $seed = 'ac1' . time();
-                break;
-            
-            case 'answer':
-                $tem_seed = 'an';
-                $seed = 'an' . time();
-                break;
-            
-            case 'role':
-                $tem_seed = 'ro';
-                $seed = 'ro1' . time();
-                break;
-            
-            case 'authorizee':
-                $tem_seed = 'au';
-                $seed = 'au' . time();
-                break;
-            
-            case 'question':
-                $tem_seed = 'qu';
-                $seed = 'qu' . time();
-                break;
-            
-            case 'question_type':
-                $tem_seed = 'qu_t';
-                $seed = 'qu_t' . time();
-                break;
-        }
-        
-        self::$_mc->set('ida_' . $type . '_seed_' . $tem_seed, $seed);
-        return $seed;
-    }
+//    static public function setNS($type){
+//        if (!self::$_mc){
+//            self::$_mc = new Memcached(); 
+//            self::$_mc->addServer('127.0.0.1', 11211);
+//        }
+//        
+//        switch ($type){
+//            case 'act':
+//                $tem_seed = 'ac3';
+//                $seed = 'ac1' . time();
+//                break;
+//            
+//            case 'answer':
+//                $tem_seed = 'an';
+//                $seed = 'an' . time();
+//                break;
+//            
+//            case 'role':
+//                $tem_seed = 'ro';
+//                $seed = 'ro1' . time();
+//                break;
+//            
+//            case 'authorizee':
+//                $tem_seed = 'au';
+//                $seed = 'au' . time();
+//                break;
+//            
+//            case 'question':
+//                $tem_seed = 'qu';
+//                $seed = 'qu' . time();
+//                break;
+//            
+//            case 'question_type':
+//                $tem_seed = 'qu_t';
+//                $seed = 'qu_t' . time();
+//                break;
+//        }
+//        
+//        self::$_mc->set('ida_' . $type . '_seed_' . $tem_seed, $seed);
+//        return $seed;
+//    }
     
     /**    
      *  @Purpose:    
@@ -120,12 +120,6 @@ class Cache{
                 $tem_seed = 'qu_t';
                 break;
         }
-        
-        if ($seed = self::$_mc->get('ida_' . $type . '_seed_' . $tem_seed)){            
-            return $seed;
-        } else {
-            $seed = self::setNS($type);
-            return $seed;
-        }
+        return $tem_seed;
     }
 }

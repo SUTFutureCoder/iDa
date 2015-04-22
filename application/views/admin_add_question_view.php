@@ -12,7 +12,15 @@
     <div class="form-group">
         <label for="question_type" class="col-sm-2 control-label">题目类型</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" name="question_type" id="question_type">
+            <?php if (!empty($question_type_list)): ?>
+            <select class="form-control" name="question_type_select" id="question_type_select">
+                <?php foreach ($question_type_list as $value): ?>
+                    <option><?= $value ?></option>
+                <?php endforeach; ?>
+            </select>
+            <br/>
+            <?php endif; ?>
+            <input type="text" class="form-control" placeholder="如不在选项中请在此添加类型" name="question_type_fill" id="question_type_fill">
         </div>
     </div>
     

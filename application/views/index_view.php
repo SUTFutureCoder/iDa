@@ -234,7 +234,7 @@
                             </tr>
                             <tr>
                                 <td><button type="button" class="btn btn-default btn-block" data-dismiss="modal" >关闭</button></td>
-                                <td><form action="<?= base_url('index.php/test')?>" method="POST"><input type="text" hidden="hidden" name="act_id" id="test_post_value"><input type="submit" type="button" class="btn btn-success btn-block" value="已知晓并准备就绪"></form></td>
+                                <td><form action="<?= base_url('index.php/test/Paper')?>" method="POST"><input type="text" hidden="hidden" name="act_id" id="test_post_value"><input type="submit" type="button" class="btn btn-success btn-block" value="已知晓并准备就绪"></form></td>
                             </tr>
                         </tbody>
                     </table>

@@ -70,6 +70,7 @@
             <h4>每十分钟自动保存一次，且在点击完成按钮之前允许重复进入继续答题。</h4>
             <h4>因为是Alpha版本，各种错误在所难免，敬请包涵。</h4>
             <h4>吐槽、BUG提交 - 开发者+运维 QQ：506200331@qq.com</h4>
+            <h4>开源代码库： <a href="https://github.com/SUTFutureCoder/iDa">https://github.com/SUTFutureCoder/iDa</a></h4>
             <hr/>
             <h5>"If you always put limits on everything you do, physical or anything else, it will spread into your work and into your life. There are no limits. There are only plateaus, and you must not stay there, you must go beyond them." - Bruce Lee</h5>
             <h5>© 沈阳工业大学 网络管理中心 2015</h5>

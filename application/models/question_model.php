@@ -46,6 +46,33 @@ class Question_model extends CI_Model{
     
     /**    
      *  @Purpose:    
+     *  检查问题类型是否存在
+     *  @Method Name:
+     *  checkQuestionType($question_type)
+     *  @Parameter: 
+     *  $question_type 问题类型
+     *  @Return: 
+     *  0 无此类型，可以添加
+     *  1 存在此类型
+    */ 
+    public function checkQuestionType($question_type){
+        $this->load->library('database');
+        if (!isset(self::$_db)){
+            self::$_db = $this->database->conn();
+        }
+        
+        $type = array();
+        $type_sum = self::$_db->ida->question->find(array('question_type' => $question_type))->count();
+        
+        if ($type_sum){
+            return 1;
+        } 
+        return 0;
+        
+    }
+    
+    /**    
+     *  @Purpose:    
      *  添加问题
      *  @Method Name:
      *  addQuestion($question)    
